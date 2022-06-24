@@ -1,25 +1,15 @@
-/**
- *
- * This is an example router, you can delete this file and then update `../pages/api/trpc/[trpc].tsx`
- */
 import { Prisma } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { createRouter } from '~/server/createRouter';
 import { prisma } from '~/server/prisma';
 
-/**
- * Default selector for Post.
- * It's important to always explicitly say which fields you want to return in order to not leak extra information
- * @see https://github.com/prisma/prisma/issues/9353
- */
 const defaultColumnSelect = Prisma.validator<Prisma.ColumnSelect>()({
   id: true,
   title: true,
 });
 
 export const columnRouter = createRouter()
-  // create
   .mutation('add', {
     input: z.object({
       id: z.string().uuid().optional(),
@@ -33,7 +23,6 @@ export const columnRouter = createRouter()
       return column;
     },
   })
-  // read
   .query('all', {
     async resolve() {
       return prisma.column.findMany({
@@ -54,13 +43,12 @@ export const columnRouter = createRouter()
       if (!column) {
         throw new TRPCError({
           code: 'NOT_FOUND',
-          message: `No post with id '${id}'`,
+          message: `No  with id '${id}'`,
         });
       }
       return column;
     },
   })
-  // update
   .mutation('edit', {
     input: z.object({
       id: z.string().uuid(),
@@ -78,7 +66,6 @@ export const columnRouter = createRouter()
       return column;
     },
   })
-  // delete
   .mutation('delete', {
     input: z.object({
       id: z.string().uuid(),
