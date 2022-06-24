@@ -28,6 +28,6 @@
     "**/*.tsx",
     "./*.js",
     "./src/**/*.js"
-  ],
+, "next.config.cjs", "prisma/seed.mts", "prisma/seed.js"  ],
   "exclude": ["node_modules"]
 }
