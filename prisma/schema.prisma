@@ -22,24 +22,17 @@ model Post {
 }
 
 model Column {
-  id           String         @id @default(uuid())
-  title        String
-  Task         Task[]
-  Board_Column Board_Column[]
+  id       String  @id @default(uuid())
+  title    String
+  board_id String
+  task     Task[]
+  board    Board   @relation(fields: [board_id], references: [id])
 }
 
 model Board {
-  id           String         @id @default(uuid())
-  title        String
-  Board_Column Board_Column[]
-}
-
-model Board_Column {
-  id        String  @id @default(uuid())
-  board_id  String
-  column_id String
-  board     Board?  @relation(fields: [board_id], references: [id])
-  column    Column? @relation(fields: [column_id], references: [id])
+  id     String   @id @default(uuid())
+  title  String
+  Column Column[]
 }
 
 model Task {
@@ -47,13 +40,14 @@ model Task {
   title       String
   description String
   column_id   String
-  column      Column?    @relation(fields: [column_id], references: [id])
+  column      Column     @relation(fields: [column_id], references: [id])
   Sub_Task    Sub_Task[]
 }
 
 model Sub_Task {
   id       String  @id @default(uuid())
+  title    String
   task_id  String
   complete Boolean
-  task     Task?   @relation(fields: [task_id], references: [id])
+  task     Task    @relation(fields: [task_id], references: [id])
 }
