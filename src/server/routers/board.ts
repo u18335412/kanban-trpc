@@ -23,11 +23,10 @@ export const boardRouter = createRouter()
       return board;
     },
   })
-
   .query('all', {
     async resolve() {
       return prisma.board.findMany({
-        select: defaultboardSelect,
+        select: { ...defaultboardSelect, ...{ Column: true } },
       });
     },
   })
