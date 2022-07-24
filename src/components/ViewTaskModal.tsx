@@ -49,20 +49,28 @@ const ViewTaskModal: FC<{
                       </Dialog.Title>
                       <Dialog.Description className="mt-4">
                         <p>{task.data?.description}</p>
-                        <div className="flex flex-col gap-y-2">
-                          {task.data?.Sub_Task.map((task) => {
+                        <div className="flex flex-col mt-3 gap-y-2">
+                          {task.data?.Sub_Task.map((sub_task) => {
                             return (
                               <div
-                                key={task.id}
-                                className="flex items-center p-2 mt-1 rounded gap-x-2 ring-1 ring-black"
+                                key={sub_task.id}
+                                className="flex items-center p-2 mt-1 text-sm rounded gap-x-2 ring-2 ring-black/40"
                               >
                                 <input
-                                  defaultChecked={task.complete}
+                                  defaultChecked={sub_task.complete}
                                   type="checkbox"
-                                  name={task.id}
-                                  id={task.id}
+                                  name={sub_task.id}
+                                  id={sub_task.id}
                                 />
-                                <label htmlFor={task.id}>{task.title}</label>
+                                <label htmlFor={sub_task.id} className="">
+                                  {sub_task.complete ? (
+                                    <s className="opacity-70">
+                                      {sub_task.title}
+                                    </s>
+                                  ) : (
+                                    <span>{sub_task.title}</span>
+                                  )}
+                                </label>
                               </div>
                             );
                           })}
