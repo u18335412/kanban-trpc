@@ -6,6 +6,7 @@ import { postRouter } from './post';
 import superjson from 'superjson';
 import { columnRouter } from './column';
 import { boardRouter } from './board';
+import { taskRouter } from './task';
 /**
  * Create your application's root router
  * If you want to use SSG, you need export this
@@ -36,6 +37,7 @@ export const appRouter = createRouter()
    */
   .merge('post.', postRouter)
   .merge('column.', columnRouter)
+  .merge('task.', taskRouter)
   .merge('board.', boardRouter);
 
 export type AppRouter = typeof appRouter;
