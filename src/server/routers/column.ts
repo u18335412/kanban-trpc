@@ -7,6 +7,11 @@ import { prisma } from '~/server/prisma';
 const defaultColumnSelect = Prisma.validator<Prisma.ColumnSelect>()({
   id: true,
   title: true,
+  task: {
+    include: {
+      Sub_Task: true,
+    },
+  },
 });
 
 export const columnRouter = createRouter()
@@ -14,6 +19,7 @@ export const columnRouter = createRouter()
     input: z.object({
       id: z.string().uuid().optional(),
       title: z.string().min(1).max(200),
+      board: z.string(),
     }),
     async resolve({ input }) {
       const column = await prisma.column.create({
@@ -58,12 +64,11 @@ export const columnRouter = createRouter()
     }),
     async resolve({ input }) {
       const { id, data } = input;
-      const column = await prisma.column.update({
+      return prisma.column.update({
         where: { id },
         data,
         select: defaultColumnSelect,
       });
-      return column;
     },
   })
   .mutation('delete', {
