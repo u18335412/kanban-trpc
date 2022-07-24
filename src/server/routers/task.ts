@@ -9,6 +9,7 @@ const defaultTaskSelect = Prisma.validator<Prisma.TaskSelect>()({
   title: true,
   description: true,
   column_id: true,
+  Sub_Task: true,
 });
 
 export const taskRouter = createRouter()
@@ -20,14 +21,12 @@ export const taskRouter = createRouter()
       column_id: z.string(),
     }),
     async resolve({ input }) {
-      const board = await prisma.task.create({
+      return prisma.task.create({
         data: input,
         select: defaultTaskSelect,
       });
-      return board;
     },
   })
-
   .query('all', {
     async resolve() {
       return prisma.task.findMany({
@@ -54,25 +53,35 @@ export const taskRouter = createRouter()
       return board;
     },
   })
-
   .mutation('edit', {
     input: z.object({
       id: z.string().uuid(),
       data: z.object({
-        title: z.string().min(1).max(200).optional(),
+        title: z.string().min(1).max(200),
+        description: z.string().min(1).max(200),
+        column_id: z.string(),
+        Sub_Task: z.array(
+          z.object({
+            title: z.string(),
+            task_id: z.string().uuid(),
+            complete: z.boolean(),
+          }),
+        ),
       }),
     }),
     async resolve({ input }) {
       const { id, data } = input;
-      const task = await prisma.task.update({
+      return prisma.task.update({
         where: { id },
-        data,
+        data: {
+          title: data.title,
+          description: data.description,
+          column_id: data.column_id,
+        },
         select: defaultTaskSelect,
       });
-      return task;
     },
   })
-
   .mutation('delete', {
     input: z.object({
       id: z.string().uuid(),
