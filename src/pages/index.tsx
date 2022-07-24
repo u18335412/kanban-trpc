@@ -1,6 +1,7 @@
 import { trpc } from '../utils/trpc';
 import { NextPageWithLayout } from './_app';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 const IndexPage: NextPageWithLayout = () => {
   const utils = trpc.useContext();
@@ -12,7 +13,6 @@ const IndexPage: NextPageWithLayout = () => {
     },
   });
 
-  // prefetch all posts for instant navigation
   // useEffect(() => {
   //   for (const { id } of postsQuery.data ?? []) {
   //     utils.prefetchQuery(['post.byId', { id }]);
@@ -35,6 +35,7 @@ const IndexPage: NextPageWithLayout = () => {
       {postsQuery.data?.map((item) => (
         <article key={item.id}>
           <h3>{item.title}</h3>
+          <p className=" text-black/60">{item.text}</p>
           <Link href={`/post/${item.id}`}>
             <a>View more</a>
           </Link>
@@ -46,12 +47,6 @@ const IndexPage: NextPageWithLayout = () => {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          /**
-           * In a real app you probably don't want to use this manually
-           * Checkout React Hook Form - it works great with tRPC
-           * @link https://react-hook-form.com/
-           */
-
           const $text: HTMLInputElement = (e as any).target.elements.text;
           const $title: HTMLInputElement = (e as any).target.elements.title;
           const input = {
