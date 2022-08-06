@@ -16,17 +16,16 @@ export const boardRouter = createRouter()
       title: z.string().min(1).max(200),
     }),
     async resolve({ input }) {
-      const board = await prisma.board.create({
+      return prisma.board.create({
         data: input,
         select: defaultboardSelect,
       });
-      return board;
     },
   })
   .query('all', {
     async resolve() {
       return prisma.board.findMany({
-        select: { ...defaultboardSelect, ...{ Column: true } },
+        select: { ...defaultboardSelect },
       });
     },
   })
@@ -38,7 +37,18 @@ export const boardRouter = createRouter()
       const { id } = input;
       const board = await prisma.board.findUnique({
         where: { id },
-        select: defaultboardSelect,
+        select: {
+          ...defaultboardSelect,
+          Column: {
+            include: {
+              task: {
+                include: {
+                  Sub_Task: true,
+                },
+              },
+            },
+          },
+        },
       });
       if (!board) {
         throw new TRPCError({
@@ -59,12 +69,11 @@ export const boardRouter = createRouter()
     }),
     async resolve({ input }) {
       const { id, data } = input;
-      const board = await prisma.board.update({
+      return await prisma.board.update({
         where: { id },
         data,
         select: defaultboardSelect,
       });
-      return board;
     },
   })
 

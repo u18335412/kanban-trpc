@@ -3,11 +3,10 @@ import { Fragment, FC } from 'react';
 import { trpc } from '~/utils/trpc';
 
 const ViewTaskModal: FC<{
-  openModal: () => void;
   closeModal: () => void;
   isOpen: boolean;
   taskId: string;
-}> = ({ openModal, closeModal, isOpen, taskId }) => {
+}> = ({ closeModal, isOpen, taskId }) => {
   const task = trpc.useQuery(['task.byId', { id: taskId }]);
   return (
     <>
