@@ -1,25 +1,24 @@
 import { FC, useState } from 'react';
 import { ReactSortable } from 'react-sortablejs';
 import Task from '~/components/Task';
-
+import { Task as TaskType } from '@prisma/client';
 interface ColumnProps {
   column: {
-    task: {
-      title: string;
-      id: string;
-      Sub_Task: any;
-    }[];
+    task: TaskType[];
     title: string;
     id: string;
   };
+  setSelectedTaskId: (taskId: string) => void;
 }
 
-const Column: FC<ColumnProps> = ({ column: { task, title, id } }) => {
+const Column: FC<ColumnProps> = ({
+  column: { task, title },
+  setSelectedTaskId,
+}) => {
   const [tasks, setTasks] = useState<any[]>(task || []);
-  console.log(title);
   return (
-    <div className=" w-60">
-      <p className=" cursor-move column-handle">
+    <div className="w-60">
+      <p className="cursor-move column-handle">
         {title} ({task.length})
       </p>
       <ReactSortable
@@ -29,16 +28,17 @@ const Column: FC<ColumnProps> = ({ column: { task, title, id } }) => {
         group="group"
         animation={200}
         delay={2}
-        className="flex flex-col mt-2 gap-y-3"
+        className="flex h-full flex-col mt-2 overflow-y-auto gap-y-3  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]
+        [scrollbar-width:none]
+      }"
       >
         {tasks.map(({ title, id, Sub_Task }) => {
           return (
             <li
               key={id}
-              //   onClick={() => {
-              //     setSelectedTaskId(id);
-              //     setIsOpen(true);
-              //   }}
+              onClick={() => {
+                setSelectedTaskId(id);
+              }}
             >
               <Task
                 id={id}
