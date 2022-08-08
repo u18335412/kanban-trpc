@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, Sub_Task } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { createRouter } from '~/server/createRouter';
@@ -19,11 +19,25 @@ export const taskRouter = createRouter()
       title: z.string().min(1).max(200),
       description: z.string().min(1).max(200),
       column_id: z.string(),
+      sub_tasks: z.array(
+        z.object({
+          title: z.string().min(1).max(200),
+        }),
+      ),
     }),
-    async resolve({ input }) {
+    async resolve({ input: { title, description, column_id, sub_tasks } }) {
       return prisma.task.create({
-        data: input,
-        select: defaultTaskSelect,
+        data: {
+          title,
+          description,
+          column_id,
+          Sub_Task: {
+            create: sub_tasks.map(({ title }) => ({
+              title,
+              complete: false,
+            })),
+          },
+        },
       });
     },
   })
