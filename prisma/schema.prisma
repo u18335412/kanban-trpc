@@ -22,11 +22,11 @@ model Post {
 }
 
 model Column {
-  id       String  @id @default(uuid())
+  id       String @id @default(uuid())
   title    String
   board_id String
   task     Task[]
-  board    Board   @relation(fields: [board_id], references: [id])
+  board    Board  @relation(fields: [board_id], references: [id])
 }
 
 model Board {
@@ -45,9 +45,9 @@ model Task {
 }
 
 model Sub_Task {
-  id       String  @id @default(uuid())
+  id       String   @id @default(uuid())
   title    String
   task_id  String
-  complete Boolean
-  task     Task    @relation(fields: [task_id], references: [id])
+  complete Boolean? @default(false)
+  task     Task     @relation(fields: [task_id], references: [id])
 }
