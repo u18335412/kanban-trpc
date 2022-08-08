@@ -1,13 +1,17 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, FC } from 'react';
 import { trpc } from '~/utils/trpc';
+import useAppStore from '~/data/useStore';
+import { useEffect } from 'react';
 
 const ViewTaskModal: FC<{
   closeModal: () => void;
   isOpen: boolean;
   taskId: string;
 }> = ({ closeModal, isOpen, taskId }) => {
-  const task = trpc.useQuery(['task.byId', { id: taskId }]);
+  const { viewTask } = useAppStore();
+  const task = trpc.useQuery(['task.byId', { id: viewTask }]);
+
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -75,15 +79,6 @@ const ViewTaskModal: FC<{
                           })}
                         </div>
                       </Dialog.Description>
-                      <div className="mt-4">
-                        <button
-                          type="button"
-                          className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                          onClick={closeModal}
-                        >
-                          Got it, thanks!
-                        </button>
-                      </div>
                     </>
                   )}
                 </Dialog.Panel>
