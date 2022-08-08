@@ -1,21 +1,21 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { ReactSortable } from 'react-sortablejs';
 import Task from '~/components/Task';
 import { Task as TaskType } from '@prisma/client';
 interface ColumnProps {
-  column: {
-    task: TaskType[];
-    title: string;
-    id: string;
-  };
+  task: TaskType[];
+  title: string;
+  id: string;
   setSelectedTaskId: (taskId: string) => void;
 }
 
-const Column: FC<ColumnProps> = ({
-  column: { task, title },
-  setSelectedTaskId,
-}) => {
-  const [tasks, setTasks] = useState<any[]>(task || []);
+const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId }) => {
+  const [tasks, setTasks] = useState<any[]>([]);
+
+  useEffect(() => {
+    setTasks(task);
+  }, [task]);
+
   return (
     <div className="w-60">
       <p className="cursor-move column-handle">
@@ -28,7 +28,7 @@ const Column: FC<ColumnProps> = ({
         group="group"
         animation={200}
         delay={2}
-        className="flex h-full flex-col mt-2 overflow-y-auto gap-y-3  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]
+        className="flex h-full flex-col mt-2  gap-y-3  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]
         [scrollbar-width:none]
       }"
       >
