@@ -1,15 +1,18 @@
 import { trpc } from '../utils/trpc';
 import { useEffect, useState } from 'react';
 import { NextPageWithLayout } from './_app';
-import ViewTaskModal from '~/components/ViewTaskModal';
 import { ReactSortable } from 'react-sortablejs';
 import Column from '~/components/Column';
 import useAppStore from '~/data/useStore';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { ModalType } from '~/components/ModalManager';
+import ModalManager from '~/components/ModalManager';
 
 const IndexPage: NextPageWithLayout = () => {
-  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
-  const { selectedBoard } = useAppStore();
+  const { selectedBoard, setViewTask } = useAppStore();
   const [columnsState, setColumnsState] = useState<any[]>([]);
+  const [openModal, setOpenModal] = useState<ModalType>(ModalType.None);
   const { isLoading, data } = trpc.useQuery([
     'board.byId',
     { id: selectedBoard },
@@ -27,18 +30,26 @@ const IndexPage: NextPageWithLayout = () => {
 
   return (
     <>
-      {selectedTaskId && (
-        <ViewTaskModal
-          taskId={selectedTaskId}
-          closeModal={() => setSelectedTaskId(null)}
-          isOpen={selectedTaskId !== null}
-        />
-      )}
-      <div className="flex items-start w-full overflow-x-auto">
-        <div className="h-full min-h-screen px-2 ">
-          <div>
-            <h2>{data && <>{data.title}</>}</h2>
-          </div>
+      <ModalManager
+        openModal={openModal}
+        closeModal={() => setOpenModal(ModalType.None)}
+      />
+
+      <div className="flex justify-between px-2 py-4 bg-white">
+        <h2>{data && data.title}</h2>
+        <div className="flex items-center gap-x-2">
+          <button
+            onClick={() => setOpenModal(ModalType.NewTask)}
+            className="flex items-center px-4 py-1 gap-x-2 ring-2 ring-black"
+          >
+            <AiOutlinePlus />
+            Add New Task
+          </button>
+          <BsThreeDotsVertical className="cursor-pointer min-w-4 min-h-4" />
+        </div>
+      </div>
+      <div className="flex items-start w-full overflow-x-auto ">
+        <div className="h-full min-h-screen px-2">
           <ReactSortable
             list={columnsState}
             setList={setColumnsState}
@@ -46,17 +57,31 @@ const IndexPage: NextPageWithLayout = () => {
             animation={200}
             delay={2}
             handle=".column-handle"
-            className="flex mt-4 gap-x-4"
+            className="flex mt-4 gap-x-4 "
           >
-            {columnsState?.map((column) => {
+            {columnsState?.map(({ title, id, task }) => {
               return (
                 <Column
-                  column={column}
-                  key={column.id}
-                  setSelectedTaskId={setSelectedTaskId}
+                  task={task || []}
+                  title={title}
+                  id={id}
+                  key={id}
+                  setSelectedTaskId={(taskId) => {
+                    setOpenModal(ModalType.ViewTask);
+                    setViewTask(taskId);
+                  }}
                 />
               );
             })}
+            <div className="grid mt-8 bg-white rounded-lg w-60 place-content-center">
+              <button
+                onClick={() => setOpenModal(ModalType.NewTask)}
+                className="flex items-center underline transition-all cursor-pointer decoration-transparent hover:decoration-current gap-x-2"
+              >
+                <AiOutlinePlus />
+                <p>Add new column</p>
+              </button>
+            </div>
           </ReactSortable>
         </div>
       </div>
