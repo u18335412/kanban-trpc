@@ -1,16 +1,17 @@
 import { FC, useEffect, useState } from 'react';
 import { ReactSortable } from 'react-sortablejs';
 import Task from '~/components/Task';
-import { Task as TaskType } from '@prisma/client';
+import { Sub_Task, Task as TaskType } from '@prisma/client';
+type ExtendedTask = TaskType & { Sub_Task: Sub_Task[] };
 interface ColumnProps {
-  task: TaskType[];
+  task: ExtendedTask[];
   title: string;
   id: string;
   setSelectedTaskId: (taskId: string) => void;
 }
 
 const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId }) => {
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<ExtendedTask[]>([]);
 
   useEffect(() => {
     setTasks(task);

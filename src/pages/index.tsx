@@ -48,7 +48,7 @@ const IndexPage: NextPageWithLayout = () => {
           <BsThreeDotsVertical className="cursor-pointer min-w-4 min-h-4" />
         </div>
       </div>
-      <div className="flex items-start w-full overflow-x-auto ">
+      <div className="flex items-start w-full overflow-x-auto overflow-y-auto">
         <div className="h-full min-h-screen px-2">
           <ReactSortable
             list={columnsState}
@@ -74,10 +74,7 @@ const IndexPage: NextPageWithLayout = () => {
               );
             })}
             <div className="grid mt-8 bg-white rounded-lg w-60 place-content-center">
-              <button
-                onClick={() => setOpenModal(ModalType.NewTask)}
-                className="flex items-center underline transition-all cursor-pointer decoration-transparent hover:decoration-current gap-x-2"
-              >
+              <button className="flex items-center underline transition-all cursor-pointer decoration-transparent hover:decoration-current gap-x-2">
                 <AiOutlinePlus />
                 <p>Add new column</p>
               </button>
