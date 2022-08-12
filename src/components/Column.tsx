@@ -13,13 +13,17 @@ interface ColumnProps {
 const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId }) => {
   const [tasks, setTasks] = useState<ExtendedTask[]>([]);
 
+  const handleTaskAddedFromAnotherList = (taskId: string) => {
+    console.log(`task: ${taskId} added to list ${title}`);
+  };
+
   useEffect(() => {
     setTasks(task);
   }, [task]);
 
   return (
     <div className="w-60">
-      <p className="cursor-move column-handle">
+      <p className="text-sm cursor-move column-handle">
         {title} ({task.length})
       </p>
       <ReactSortable
@@ -32,6 +36,9 @@ const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId }) => {
         className="flex h-full flex-col mt-2  gap-y-3  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]
         [scrollbar-width:none]
       }"
+        onAdd={(event) =>
+          handleTaskAddedFromAnotherList(event.item.dataset.id || '')
+        }
       >
         {tasks.map(({ title, id, Sub_Task }) => {
           return (
