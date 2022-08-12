@@ -1,5 +1,4 @@
-import { useState, FC, useEffect } from 'react';
-import useAppStore from '~/data/useStore';
+import { FC } from 'react';
 import NewTaskModal from './NewTaskModal';
 import ViewTaskModal from './ViewTaskModal';
 
@@ -13,12 +12,9 @@ const ModalManager: FC<{ openModal: ModalType; closeModal: () => void }> = ({
   openModal,
   closeModal,
 }) => {
-  const { viewTask } = useAppStore();
-
   return (
     <div>
       <ViewTaskModal
-        taskId={viewTask}
         closeModal={closeModal}
         isOpen={openModal === ModalType.ViewTask}
       />
