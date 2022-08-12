@@ -12,9 +12,11 @@ export const DefaultLayout = ({ children }: DefaultLayoutProps) => {
         <title>Kanban</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="flex">
+      <div className="flex max-h-screen">
         <SideBar />
-        <main className="bg-black/20 w-[90%]">{children}</main>
+        <main className="w-full min-h-screen overflow-x-auto overflow-y-auto bg-black/20">
+          {children}
+        </main>
       </div>
       {process.env.NODE_ENV !== 'production' && (
         <ReactQueryDevtools initialIsOpen={false} />
