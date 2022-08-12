@@ -6,8 +6,7 @@ import Column from '~/components/Column';
 import useAppStore from '~/data/useStore';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import { ModalType } from '~/components/ModalManager';
-import ModalManager from '~/components/ModalManager';
+import ModalManager, { ModalType } from '~/components/ModalManager';
 
 const IndexPage: NextPageWithLayout = () => {
   const { selectedBoard, setViewTask } = useAppStore();
@@ -49,7 +48,7 @@ const IndexPage: NextPageWithLayout = () => {
         </div>
       </div>
       <div className="flex items-start w-full overflow-x-auto overflow-y-auto">
-        <div className="h-full min-h-screen px-2">
+        <div className="h-full px-2">
           <ReactSortable
             list={columnsState}
             setList={setColumnsState}
@@ -73,7 +72,7 @@ const IndexPage: NextPageWithLayout = () => {
                 />
               );
             })}
-            <div className="grid mt-8 bg-white rounded-lg w-60 place-content-center">
+            <div className="grid h-screen mt-8 bg-white rounded-lg w-60 place-content-center">
               <button className="flex items-center underline transition-all cursor-pointer decoration-transparent hover:decoration-current gap-x-2">
                 <AiOutlinePlus />
                 <p>Add new column</p>
