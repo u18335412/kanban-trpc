@@ -2,16 +2,15 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, FC } from 'react';
 import { trpc } from '~/utils/trpc';
 import useAppStore from '~/data/useStore';
-import { useEffect } from 'react';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 
 const ViewTaskModal: FC<{
   closeModal: () => void;
   isOpen: boolean;
-  taskId: string;
-}> = ({ closeModal, isOpen, taskId }) => {
-  const { viewTask } = useAppStore();
+}> = ({ closeModal, isOpen }) => {
+  const { viewTask, selectedBoard } = useAppStore();
   const task = trpc.useQuery(['task.byId', { id: viewTask }]);
-
+  const board = trpc.useQuery(['board.byId', { id: selectedBoard }]);
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -46,39 +45,67 @@ const ViewTaskModal: FC<{
                     <>
                       <Dialog.Title
                         as="h3"
-                        className="text-lg font-medium leading-6 text-gray-900"
+                        className="flex items-center justify-between text-lg font-medium leading-6 text-gray-900"
                       >
-                        {task.data?.title}
+                        <span className="w-full">{task.data?.title}</span>
+                        <button aria-roledescription="Options">
+                          <BsThreeDotsVertical />
+                        </button>
                       </Dialog.Title>
-                      <Dialog.Description className="mt-4">
+                      <div className="mt-4">
                         <p>{task.data?.description}</p>
-                        <div className="flex flex-col mt-3 gap-y-2">
-                          {task.data?.Sub_Task.map((sub_task) => {
+                        <div className="mt-3 ">
+                          <p>
+                            Subtasks(
+                            {`${
+                              task.data?.Sub_Task.filter((_) => _.complete)
+                                .length
+                            } of ${task.data?.Sub_Task.length}`}
+                            )
+                          </p>
+                          <ul className="flex flex-col mt-1 gap-y-2">
+                            {task.data?.Sub_Task.map(
+                              ({ id, complete, title }) => {
+                                return (
+                                  <li
+                                    key={id}
+                                    className="flex items-center p-2 mt-1 text-sm rounded gap-x-2 ring-2 ring-black/40"
+                                  >
+                                    <input
+                                      defaultChecked={complete || undefined}
+                                      type="checkbox"
+                                      name={id}
+                                      id={id}
+                                    />
+                                    <label htmlFor={id} className="">
+                                      {complete ? (
+                                        <s className="opacity-70">{title}</s>
+                                      ) : (
+                                        <span>{title}</span>
+                                      )}
+                                    </label>
+                                  </li>
+                                );
+                              },
+                            )}
+                          </ul>
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <p>Status</p>
+                        <select
+                          className="w-full p-2 mt-1 rounded ring-1"
+                          defaultValue={task.data?.column_id}
+                        >
+                          {board.data?.Column.map(({ id, title }) => {
                             return (
-                              <div
-                                key={sub_task.id}
-                                className="flex items-center p-2 mt-1 text-sm rounded gap-x-2 ring-2 ring-black/40"
-                              >
-                                <input
-                                  defaultChecked={sub_task.complete}
-                                  type="checkbox"
-                                  name={sub_task.id}
-                                  id={sub_task.id}
-                                />
-                                <label htmlFor={sub_task.id} className="">
-                                  {sub_task.complete ? (
-                                    <s className="opacity-70">
-                                      {sub_task.title}
-                                    </s>
-                                  ) : (
-                                    <span>{sub_task.title}</span>
-                                  )}
-                                </label>
-                              </div>
+                              <option key={id} value={id}>
+                                {title}
+                              </option>
                             );
                           })}
-                        </div>
-                      </Dialog.Description>
+                        </select>
+                      </div>
                     </>
                   )}
                 </Dialog.Panel>
