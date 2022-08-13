@@ -4,6 +4,7 @@ import { useForm, useFieldArray, FieldValues } from 'react-hook-form';
 import * as zod from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AiOutlineClose } from 'react-icons/ai';
+import { trpc } from '~/utils/trpc';
 interface NewBoardModalProps {
   isOpen: boolean;
   closeModal: () => void;
@@ -19,18 +20,31 @@ const schema = zod.object({
 });
 
 const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
+  const mutate = trpc.useMutation(['board.add']);
+  const utils = trpc.useContext();
   const { register, handleSubmit, control } = useForm({
     resolver: zodResolver(schema),
   });
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'sub_tasks',
     rules: { minLength: 1 },
   });
 
-  const handleFormSubmit = () => {
-    console.log('Hello world');
+  const handleFormSubmit = (data: FieldValues) => {
+    console.log('data', data);
+    mutate.mutate(
+      {
+        title: data.title,
+        columns: data.columns,
+      },
+      {
+        onSuccess: (res) => {
+          utils.invalidateQueries(['board.all']);
+          closeModal();
+        },
+      },
+    );
   };
 
   const addColumn = (e: FormEvent) => {
@@ -103,7 +117,7 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
                               <input
                                 className="w-full p-2 rounded ring-black/50 ring-1"
                                 type="text"
-                                {...register(`column.${index}.title`, {
+                                {...register(`columns.${index}.title`, {
                                   required: true,
                                 })}
                               />
