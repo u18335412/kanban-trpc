@@ -73,13 +73,15 @@ export const taskRouter = createRouter()
       data: z.object({
         title: z.string().min(1).max(200),
         description: z.string().min(1).max(200),
-        column_id: z.string(),
+        column_id: z.string().min(1),
         Sub_Task: z.array(
-          z.object({
-            title: z.string(),
-            task_id: z.string().uuid(),
-            complete: z.boolean(),
-          }),
+          z
+            .object({
+              title: z.string(),
+              task_id: z.string().uuid(),
+              complete: z.boolean(),
+            })
+            .optional(),
         ),
       }),
     }),
@@ -93,6 +95,29 @@ export const taskRouter = createRouter()
           column_id: data.column_id,
         },
         select: defaultTaskSelect,
+      });
+    },
+  })
+  .mutation('switchColumns', {
+    input: z.object({
+      id: z.string().uuid(),
+      data: z.object({
+        to_column_id: z.string().uuid(),
+      }),
+    }),
+    async resolve({ input }) {
+      const {
+        id,
+        data: { to_column_id },
+      } = input;
+      return prisma.task.update({
+        where: { id },
+        data: {
+          column_id: to_column_id,
+        },
+        select: {
+          id: true,
+        },
       });
     },
   })
