@@ -4,10 +4,11 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { BiShow, BiHide } from 'react-icons/bi';
 import { trpc } from '../utils/trpc';
 import useAppStore from '~/data/useStore';
+import { ModalType } from './ModalManager';
 
 const SideBar: FC = () => {
   const [hideSideBar, setHideSideBar] = useState<boolean>(false);
-  const { setSelectedBoard, selectedBoard } = useAppStore();
+  const { setSelectedBoard, selectedBoard, setSelectedModal } = useAppStore();
   const { isLoading, data } = trpc.useQuery(['board.all']);
 
   const updateSelectedBoard = (id: string) => {
@@ -49,17 +50,22 @@ const SideBar: FC = () => {
                     </li>
                   );
                 })}
-                <li className="flex items-center px-4 text-indigo-500 cursor-pointer gap-x-2">
-                  <TbLayoutBoardSplit className="w-5 h-5" />
-                  <div className="flex items-center w-full">
-                    <AiOutlinePlus className="w-5 h-5" />
-                    <span className="w-full">Create New Board</span>
-                  </div>
+                <li>
+                  <button
+                    onClick={() => setSelectedModal(ModalType.NewBoard)}
+                    className="flex items-center px-4 text-indigo-500 cursor-pointer gap-x-2"
+                  >
+                    <TbLayoutBoardSplit className="w-5 h-5" />
+                    <div className="flex items-center w-full">
+                      <AiOutlinePlus className="w-5 h-5" />
+                      <span className="w-full">Create New Board</span>
+                    </div>
+                  </button>
                 </li>
               </ul>
             </nav>
           </div>
-          <div className="flex items-center px-4 gap-x-2 mt-auto">
+          <div className="flex items-center px-4 mt-auto gap-x-2">
             <div className="relative">
               <BiHide className="pointer-events-none " />
               <input

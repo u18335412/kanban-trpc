@@ -14,7 +14,10 @@ export const DefaultLayout = ({ children }: DefaultLayoutProps) => {
       </Head>
       <div className="flex max-h-screen">
         <SideBar />
-        <main className="w-full overflow-x-auto overflow-y-auto bg-black/20">
+        <main
+          className="w-full max-h-screen overflow-x-auto overflow-y-auto bg-black/20 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]
+        [scrollbar-width:none]"
+        >
           {children}
         </main>
       </div>

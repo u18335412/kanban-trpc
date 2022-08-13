@@ -9,9 +9,8 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import ModalManager, { ModalType } from '~/components/ModalManager';
 
 const IndexPage: NextPageWithLayout = () => {
-  const { selectedBoard, setViewTask } = useAppStore();
+  const { selectedBoard, setViewTask, setSelectedModal } = useAppStore();
   const [columnsState, setColumnsState] = useState<any[]>([]);
-  const [openModal, setOpenModal] = useState<ModalType>(ModalType.None);
   const { isLoading, data } = trpc.useQuery([
     'board.byId',
     { id: selectedBoard },
@@ -29,16 +28,13 @@ const IndexPage: NextPageWithLayout = () => {
 
   return (
     <>
-      <ModalManager
-        openModal={openModal}
-        closeModal={() => setOpenModal(ModalType.None)}
-      />
+      <ModalManager closeModal={() => setSelectedModal(ModalType.None)} />
 
       <div className="flex justify-between px-2 py-4 bg-white ">
         <h2>{data && data.title}</h2>
         <div className="flex items-center gap-x-2">
           <button
-            onClick={() => setOpenModal(ModalType.NewTask)}
+            onClick={() => setSelectedModal(ModalType.NewTask)}
             className="flex items-center px-4 py-1 rounded-full gap-x-2 ring-2 ring-black"
           >
             <AiOutlinePlus />
@@ -47,7 +43,7 @@ const IndexPage: NextPageWithLayout = () => {
           <BsThreeDotsVertical className="cursor-pointer min-w-4 min-h-4" />
         </div>
       </div>
-      <div className="flex  items-start w-full overflow-x-auto overflow-y-auto">
+      <div className="flex items-start w-full overflow-x-auto overflow-y-auto">
         <div className="h-full px-2">
           <ReactSortable
             list={columnsState}
@@ -66,7 +62,7 @@ const IndexPage: NextPageWithLayout = () => {
                   id={id}
                   key={id}
                   setSelectedTaskId={(taskId) => {
-                    setOpenModal(ModalType.ViewTask);
+                    setSelectedModal(ModalType.ViewTask);
                     setViewTask(taskId);
                   }}
                 />

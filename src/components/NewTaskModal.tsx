@@ -139,10 +139,10 @@ const NewTaskModal: FC<{
                       </div>
                       <div className="flex">
                         <p className="">Subtasks</p>
-                        <div className="flex flex-col gap-y-2 ">
+                        <ul className="flex flex-col gap-y-2 ">
                           {fields.map(({ id }, index) => {
                             return (
-                              <div
+                              <li
                                 key={id}
                                 className="flex items-center justify-between gap-x-2"
                               >
@@ -159,10 +159,10 @@ const NewTaskModal: FC<{
                                 >
                                   <AiOutlineClose className="bg-white" />
                                 </button>
-                              </div>
+                              </li>
                             );
                           })}
-                        </div>
+                        </ul>
                         <div className="mt-4">
                           <button
                             onClick={(e) => addSubTask(e)}

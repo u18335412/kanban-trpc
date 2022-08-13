@@ -22,11 +22,10 @@ export const columnRouter = createRouter()
       board: z.string(),
     }),
     async resolve({ input }) {
-      const column = await prisma.column.create({
+      return prisma.column.create({
         data: input,
         select: defaultColumnSelect,
       });
-      return column;
     },
   })
   .query('all', {
