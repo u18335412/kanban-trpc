@@ -22,7 +22,7 @@ const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId }) => {
   }, [task]);
 
   return (
-    <div className="w-60">
+    <div className="w-60 ">
       <p className="text-sm cursor-move column-handle">
         {title} ({task.length})
       </p>

@@ -1,12 +1,12 @@
 import { ReactNode, FC, Fragment } from 'react';
-import { Transition as HeadlessUiTransition } from '@headlessui/react';
+import { Transition } from '@headlessui/react';
 
-const Transition: FC<{
+const TransitionChild: FC<{
   children: ReactNode;
   isOpen: boolean;
 }> = ({ children }) => {
   return (
-    <HeadlessUiTransition
+    <Transition
       as={Fragment}
       enter="ease-out duration-300"
       enterFrom="opacity-0 scale-95"
@@ -16,8 +16,8 @@ const Transition: FC<{
       leaveTo="opacity-0 scale-95"
     >
       {children}
-    </HeadlessUiTransition>
+    </Transition>
   );
 };
 
-export default Transition;
+export default TransitionChild;

@@ -34,20 +34,20 @@ const IndexPage: NextPageWithLayout = () => {
         closeModal={() => setOpenModal(ModalType.None)}
       />
 
-      <div className="flex justify-between px-2 py-4 bg-white">
+      <div className="flex justify-between px-2 py-4 bg-white ">
         <h2>{data && data.title}</h2>
         <div className="flex items-center gap-x-2">
           <button
             onClick={() => setOpenModal(ModalType.NewTask)}
-            className="flex items-center px-4 py-1 gap-x-2 ring-2 ring-black"
+            className="flex items-center px-4 py-1 rounded-full gap-x-2 ring-2 ring-black"
           >
             <AiOutlinePlus />
-            Add New Task
+            <span className="hidden md:flex">Add New Task</span>
           </button>
           <BsThreeDotsVertical className="cursor-pointer min-w-4 min-h-4" />
         </div>
       </div>
-      <div className="flex items-start w-full overflow-x-auto overflow-y-auto">
+      <div className="flex  items-start w-full overflow-x-auto overflow-y-auto">
         <div className="h-full px-2">
           <ReactSortable
             list={columnsState}

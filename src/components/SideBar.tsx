@@ -32,14 +32,16 @@ const SideBar: FC = () => {
           <div className="mt-8">
             <p className="px-4 uppercase">All boards({data?.length})</p>
             <nav className="text-sm">
-              <ul className="flex flex-col mt-4 gap-y-2">
+              <ul className="flex flex-col mt-4 gap-y-2 ">
                 {data?.map(({ id, title }) => {
                   return (
                     <li
                       onClick={() => updateSelectedBoard(id)}
                       key={id}
                       className={`flex items-center cursor-pointer py-2 gap-x-2 px-4 ${
-                        selectedBoard === id ? 'bg-indigo-500 text-white' : ''
+                        selectedBoard === id
+                          ? 'bg-indigo-500 text-white transition-all mr-8 rounded-r-full'
+                          : ''
                       }`}
                     >
                       <TbLayoutBoardSplit className="w-5 h-5" />
@@ -57,7 +59,7 @@ const SideBar: FC = () => {
               </ul>
             </nav>
           </div>
-          <div className="flex items-center px-4 gap-x-2">
+          <div className="flex items-center px-4 gap-x-2 mt-auto">
             <div className="relative">
               <BiHide className="pointer-events-none " />
               <input
