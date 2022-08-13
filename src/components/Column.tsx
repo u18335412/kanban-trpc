@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { ReactSortable } from 'react-sortablejs';
 import Task from '~/components/Task';
 import { Sub_Task, Task as TaskType } from '@prisma/client';
+import { trpc } from '~/utils/trpc';
 type ExtendedTask = TaskType & { Sub_Task: Sub_Task[] };
 interface ColumnProps {
   task: ExtendedTask[];
@@ -10,11 +11,24 @@ interface ColumnProps {
   setSelectedTaskId: (taskId: string) => void;
 }
 
-const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId }) => {
+const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId, id }) => {
   const [tasks, setTasks] = useState<ExtendedTask[]>([]);
+  const mutate = trpc.useMutation(['task.switchColumns']);
 
   const handleTaskAddedFromAnotherList = (taskId: string) => {
-    console.log(`task: ${taskId} added to list ${title}`);
+    mutate.mutate(
+      {
+        id: taskId,
+        data: {
+          to_column_id: id,
+        },
+      },
+      {
+        onSuccess: (res) => {
+          console.log('success', res);
+        },
+      },
+    );
   };
 
   useEffect(() => {
