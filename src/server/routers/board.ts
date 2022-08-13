@@ -12,12 +12,22 @@ const defaultboardSelect = Prisma.validator<Prisma.BoardSelect>()({
 export const boardRouter = createRouter()
   .mutation('add', {
     input: z.object({
-      id: z.string().uuid().optional(),
       title: z.string().min(1).max(200),
+      columns: z.array(
+        z.object({
+          title: z.string().min(1).max(200),
+        }),
+      ),
     }),
     async resolve({ input }) {
+      const { title, columns } = input;
       return prisma.board.create({
-        data: input,
+        data: {
+          title: title,
+          Column: {
+            create: columns,
+          },
+        },
         select: defaultboardSelect,
       });
     },
