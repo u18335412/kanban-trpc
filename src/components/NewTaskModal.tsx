@@ -5,6 +5,7 @@ import { useForm, useFieldArray, FieldValues } from 'react-hook-form';
 import * as zod from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AiOutlinePlus, AiOutlineClose } from 'react-icons/ai';
+import TransitionChild from './Transition';
 import useAppStore from '~/data/useStore';
 
 interface SubTask {
@@ -18,12 +19,12 @@ interface FormData {
 }
 
 const schema = zod.object({
-  title: zod.string().min(1, { message: 'Rquired' }),
+  title: zod.string().min(1, { message: 'Required' }),
   description: zod.string(),
-  column_id: zod.string().min(1, { message: 'Rquired' }),
+  column_id: zod.string().min(1, { message: 'Required' }),
   sub_tasks: zod.array(
     zod.object({
-      title: zod.string().min(1, { message: 'Rquired' }),
+      title: zod.string().min(1, { message: 'Required' }),
     }),
   ),
 });
@@ -80,8 +81,7 @@ const NewTaskModal: FC<{
     <>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
-          <Transition.Child
-            as={Fragment}
+          <TransitionChild
             enter="ease-out duration-300 "
             enterFrom="opacity-0"
             enterTo="opacity-100"
@@ -90,19 +90,11 @@ const NewTaskModal: FC<{
             leaveTo="opacity-0"
           >
             <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
+          </TransitionChild>
 
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex items-center justify-center min-h-full p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
+              <TransitionChild>
                 <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                   <Dialog.Title
                     as="h3"
@@ -201,7 +193,7 @@ const NewTaskModal: FC<{
                     </div>
                   </form>
                 </Dialog.Panel>
-              </Transition.Child>
+              </TransitionChild>
             </div>
           </div>
         </Dialog>

@@ -5,16 +5,18 @@ import * as zod from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AiOutlineClose } from 'react-icons/ai';
 import { trpc } from '~/utils/trpc';
+import TransitionChild from './Transition';
+
 interface NewBoardModalProps {
   isOpen: boolean;
   closeModal: () => void;
 }
 
 const schema = zod.object({
-  title: zod.string().min(1, { message: 'Rquired' }),
+  title: zod.string().min(1, { message: 'Required' }),
   columns: zod.array(
     zod.object({
-      title: zod.string().min(1, { message: 'Rquired' }),
+      title: zod.string().min(1, { message: 'Required' }),
     }),
   ),
 });
@@ -32,7 +34,6 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
   });
 
   const handleFormSubmit = (data: FieldValues) => {
-    console.log('data', data);
     mutate.mutate(
       {
         title: data.title,
@@ -54,14 +55,13 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
 
   useEffect(() => {
     append([{ title: '' }, { title: '' }]);
-  }, []);
+  }, [append]);
 
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
-          <Transition.Child
-            as={Fragment}
+          <TransitionChild
             enter="ease-out duration-300 "
             enterFrom="opacity-0"
             enterTo="opacity-100"
@@ -70,19 +70,11 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
             leaveTo="opacity-0"
           >
             <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
+          </TransitionChild>
 
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex items-center justify-center min-h-full p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
+              <TransitionChild>
                 <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                   <Dialog.Title
                     as="h3"
@@ -149,7 +141,7 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
                     </div>
                   </form>
                 </Dialog.Panel>
-              </Transition.Child>
+              </TransitionChild>
             </div>
           </div>
         </Dialog>

@@ -47,7 +47,7 @@ const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId, id }) => {
         group="group"
         animation={200}
         delay={2}
-        className="flex h-full flex-col mt-2  gap-y-3  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]
+        className="flex h-full flex-col mt-2 gap-y-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]
         [scrollbar-width:none]
       }"
         onAdd={(event) =>
