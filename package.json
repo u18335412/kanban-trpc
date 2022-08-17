@@ -10,7 +10,7 @@
     "db-seed": "prisma db seed",
     "db-migrate-dev": "npx prisma migrate dev",
     "db-nuke": "docker-compose down --volumes --remove-orphans",
-    "dev": "next dev",
+    "dev": "doppler run -- next dev",
     "dx": "run-s db-up db-migrate-dev db-seed dev",
     "start": "next start",
     "lint": "eslint src",
