@@ -11,8 +11,10 @@ export enum ModalType {
   NewBoard = 'NewBoard',
 }
 
-const ModalManager: FC<{ closeModal: () => void }> = ({ closeModal }) => {
-  const { selectedModal } = useAppStore();
+const ModalManager: FC = () => {
+  const { selectedModal, setSelectedModal } = useAppStore();
+  const closeModal = () => setSelectedModal(ModalType.None);
+
   return (
     <div>
       <ViewTaskModal

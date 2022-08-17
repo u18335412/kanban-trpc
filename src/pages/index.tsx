@@ -28,7 +28,7 @@ const IndexPage: NextPageWithLayout = () => {
 
   return (
     <>
-      <ModalManager closeModal={() => setSelectedModal(ModalType.None)} />
+      <ModalManager />
 
       <div className="flex justify-between px-2 py-4 bg-white ">
         <h2>{data && data.title}</h2>
