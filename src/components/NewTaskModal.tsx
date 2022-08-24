@@ -55,7 +55,6 @@ const NewTaskModal: FC<{
   });
 
   const handleFormSubmit = (validatedData: FieldValues) => {
-    console.log('Task', validatedData);
     mutation.mutate(
       {
         title: validatedData.title,
@@ -166,12 +165,12 @@ const NewTaskModal: FC<{
                         <div className="mt-4">
                           <p>Status</p>
                           <select
+                            defaultValue={data?.Column[0] && data?.Column[0].id}
                             {...register('column_id', { required: true })}
                             className={`w-full p-2 mt-1 ring-2 ${
-                              isLoading ? 'bg-gray-300 animate-pulse h-10' : ''
+                              isLoading && 'bg-gray-300 animate-pulse h-10'
                             }`}
                           >
-                            <option value="">select status</option>
                             {data?.Column.map(({ id, title }) => {
                               return (
                                 <option key={id} value={id.toString()}>

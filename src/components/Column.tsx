@@ -14,7 +14,6 @@ interface ColumnProps {
 const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId, id }) => {
   const [tasks, setTasks] = useState<ExtendedTask[]>([]);
   const mutate = trpc.useMutation(['task.switchColumns']);
-
   const handleTaskAddedFromAnotherList = (taskId: string) => {
     mutate.mutate(
       {
@@ -30,11 +29,9 @@ const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId, id }) => {
       },
     );
   };
-
   useEffect(() => {
     setTasks(task);
   }, [task]);
-
   return (
     <div className="w-60 ">
       <p className="text-sm cursor-move column-handle">
@@ -67,8 +64,9 @@ const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId, id }) => {
                 title={title}
                 subtask_length={Sub_Task.length}
                 subtasks_completed={
-                  Sub_Task.filter((sub_task: any) => sub_task.complete === true)
-                    .length
+                  Sub_Task.filter(
+                    (sub_task: Sub_Task) => sub_task.complete === true,
+                  ).length
                 }
               />
             </li>
