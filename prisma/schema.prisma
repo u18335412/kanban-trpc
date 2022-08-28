@@ -22,11 +22,12 @@ model Post {
 }
 
 model Column {
-  id       String @id @default(uuid())
-  title    String
-  board_id String
-  task     Task[]
-  board    Board  @relation(fields: [board_id], references: [id])
+  id         String       @id @default(uuid())
+  title      String
+  board_id   String
+  task       Task[]
+  board      Board        @relation(fields: [board_id], references: [id])
+  Task_Order Task_Order[]
 }
 
 model Board {
@@ -50,4 +51,11 @@ model Sub_Task {
   task_id  String
   complete Boolean? @default(false)
   task     Task     @relation(fields: [task_id], references: [id])
+}
+
+model Task_Order {
+  id        String @id @default(uuid())
+  column_id String
+  order     Json
+  column    Column @relation(fields: [column_id], references: [id])
 }

@@ -3,6 +3,8 @@ import { ReactSortable } from 'react-sortablejs';
 import Task from '~/components/Task';
 import { Sub_Task, Task as TaskType } from '@prisma/client';
 import { trpc } from '~/utils/trpc';
+import useAppStore from '~/data/useStore';
+
 type ExtendedTask = TaskType & { Sub_Task: Sub_Task[] };
 interface ColumnProps {
   task: ExtendedTask[];
@@ -12,8 +14,10 @@ interface ColumnProps {
 }
 
 const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId, id }) => {
+  const { selectedBoard } = useAppStore();
   const [tasks, setTasks] = useState<ExtendedTask[]>([]);
   const mutate = trpc.useMutation(['task.switchColumns']);
+  const utils = trpc.useContext();
   const handleTaskAddedFromAnotherList = (taskId: string) => {
     mutate.mutate(
       {
@@ -25,6 +29,7 @@ const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId, id }) => {
       {
         onSuccess: (res) => {
           console.log('success', res);
+          // utils.invalidateQueries(['board.byId', { id: selectedBoard }]);
         },
       },
     );
@@ -38,6 +43,19 @@ const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId, id }) => {
         {title} ({task.length})
       </p>
       <ReactSortable
+        store={{
+          get: function (sortable) {
+            console.log(sortable); // even this is not being logged
+            // const order = localStorage.getItem(sortable.options.group.name);
+            return [];
+          },
+
+          set: function (sortable) {
+            const order = sortable.toArray();
+            console.log('order', order);
+            // localStorage.setItem(sortable.options.group.name, order.join('|'));
+          },
+        }}
         tag="ul"
         list={tasks}
         setList={setTasks}
