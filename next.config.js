@@ -1,5 +1,6 @@
 // @ts-check
 /* eslint-disable @typescript-eslint/no-var-requires */
+const { config } = require('process');
 const { env } = require('./src/server/env');
 
 /**
@@ -27,3 +28,8 @@ module.exports = getConfig({
     NODE_ENV: env.NODE_ENV,
   },
 });
+
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+module.exports = withBundleAnalyzer(getConfig(config));
