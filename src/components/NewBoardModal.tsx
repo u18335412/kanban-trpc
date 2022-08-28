@@ -40,7 +40,7 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
         columns: data.columns,
       },
       {
-        onSuccess: (res) => {
+        onSuccess: () => {
           utils.invalidateQueries(['board.all']);
           closeModal();
         },

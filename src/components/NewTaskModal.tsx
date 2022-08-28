@@ -8,16 +8,6 @@ import { AiOutlinePlus, AiOutlineClose } from 'react-icons/ai';
 import TransitionChild from './Transition';
 import useAppStore from '~/data/useStore';
 
-interface SubTask {
-  title: string;
-  complete: boolean;
-}
-
-interface FormData {
-  title: string;
-  description: string;
-}
-
 const schema = zod.object({
   title: zod.string().min(1, { message: 'Required' }),
   description: zod.string(),
@@ -40,12 +30,7 @@ const NewTaskModal: FC<{
     { id: selectedBoard },
   ]);
   const mutation = trpc.useMutation(['task.add']);
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit, control } = useForm({
     resolver: zodResolver(schema),
   });
   const { fields, append, remove } = useFieldArray({

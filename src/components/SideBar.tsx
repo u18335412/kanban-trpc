@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { TbLayoutBoardSplit } from 'react-icons/tb';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { BiShow, BiHide } from 'react-icons/bi';
+import { BiHide } from 'react-icons/bi';
 import { trpc } from '../utils/trpc';
 import useAppStore from '~/data/useStore';
 import { ModalType } from './ModalManager';
