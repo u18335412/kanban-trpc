@@ -3,7 +3,7 @@ import { ReactSortable } from 'react-sortablejs';
 import Task from '~/components/Task';
 import { Sub_Task, Task as TaskType } from '@prisma/client';
 import { trpc } from '~/utils/trpc';
-import useAppStore from '~/data/useStore';
+// import useAppStore from '~/data/useStore';
 
 type ExtendedTask = TaskType & { Sub_Task: Sub_Task[] };
 interface ColumnProps {
@@ -14,10 +14,10 @@ interface ColumnProps {
 }
 
 const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId, id }) => {
-  const { selectedBoard } = useAppStore();
+  // const { selectedBoard } = useAppStore();
   const [tasks, setTasks] = useState<ExtendedTask[]>([]);
   const mutate = trpc.useMutation(['task.switchColumns']);
-  const utils = trpc.useContext();
+  // const utils = trpc.useContext();
   const handleTaskAddedFromAnotherList = (taskId: string) => {
     mutate.mutate(
       {
@@ -38,10 +38,12 @@ const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId, id }) => {
     setTasks(task);
   }, [task]);
   return (
-    <div className="w-60 ">
-      <p className="text-sm cursor-move column-handle">
-        {title} ({task.length})
-      </p>
+    <div className="transition-all w-[17.5rem]">
+      <div>
+        <p className="text-xs tracking-[0.15rem] font-bold cursor-move column-handle">
+          {title} ({task.length})
+        </p>
+      </div>
       <ReactSortable
         store={{
           get: function (sortable) {
@@ -62,9 +64,8 @@ const Column: FC<ColumnProps> = ({ task, title, setSelectedTaskId, id }) => {
         group="group"
         animation={200}
         delay={2}
-        className="flex h-full flex-col mt-2 gap-y-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]
-        [scrollbar-width:none]
-      }"
+        className="flex h-full flex-col mt-6 gap-y-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]
+        [scrollbar-width:none]"
         onAdd={(event) =>
           handleTaskAddedFromAnotherList(event.item.dataset.id || '')
         }
