@@ -92,9 +92,14 @@ export const boardRouter = createRouter()
   })
   .mutation('edit', {
     input: z.object({
-      id: z.string().uuid(),
+      id: z.string().min(1).max(200),
       data: z.object({
-        title: z.string().min(1).max(200).optional(),
+        title: z.string().min(1).max(200),
+        columns: z.array(
+          z.object({
+            title: z.string().min(1).max(200),
+          }),
+        ),
       }),
     }),
     async resolve({ input }) {
