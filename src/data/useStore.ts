@@ -1,6 +1,5 @@
 import create from 'zustand';
 import { ModalType } from '~/components/ModalManager';
-
 interface AppStore {
   selectedBoard: string;
   viewTask: string;
