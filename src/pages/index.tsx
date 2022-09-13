@@ -7,6 +7,21 @@ import useAppStore from '~/data/useStore';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import ModalManager, { ModalType } from '~/components/ModalManager';
+import Button from '~/components/Button';
+import EmptyBoard from '~/components/EmptyBoard';
+import DropDown from '~/components/DropDown';
+
+const DropDownItems = [
+  {
+    text: 'Edit Board',
+    action: () => [],
+  },
+  {
+    text: 'Delete Board',
+    action: () => [],
+    text_color: ' text-red',
+  },
+];
 
 const IndexPage: NextPageWithLayout = () => {
   const { selectedBoard, setViewTask, setSelectedModal } = useAppStore();
@@ -29,54 +44,60 @@ const IndexPage: NextPageWithLayout = () => {
   return (
     <>
       <ModalManager />
-
-      <div className="flex justify-between px-2 py-4 bg-white ">
-        <h2>{data && data.title}</h2>
-        <div className="flex items-center gap-x-2">
-          <button
+      <div className="flex items-center justify-between h-24 px-6 bg-white dark:bg-dark-grey">
+        <h2 className="text-xl font-bold">{data && data.title}</h2>
+        <div className="flex items-center gap-x-6">
+          <Button
+            disabled={data && data?.Column?.length === 0 ? true : false}
+            icon={<AiOutlinePlus />}
+            className=""
             onClick={() => setSelectedModal(ModalType.NewTask)}
-            className="flex items-center px-4 py-1 rounded-full gap-x-2 ring-2 ring-black"
           >
-            <AiOutlinePlus />
-            <span className="hidden md:flex">Add New Task</span>
-          </button>
-          <BsThreeDotsVertical className="cursor-pointer min-w-4 min-h-4" />
+            Add New Task
+          </Button>
+          <div>
+            <DropDown icon={<BsThreeDotsVertical />} items={DropDownItems} />
+          </div>
         </div>
       </div>
-      <div className="flex items-start w-full overflow-x-auto overflow-y-auto">
-        <div className="h-full px-2">
-          <ReactSortable
-            list={columnsState}
-            setList={setColumnsState}
-            group={'board'}
-            animation={200}
-            delay={2}
-            handle=".column-handle"
-            className="flex mt-4 gap-x-4 "
-          >
-            {columnsState?.map(({ title, id, task }) => {
-              return (
-                <Column
-                  task={task || []}
-                  title={title}
-                  id={id}
-                  key={id}
-                  setSelectedTaskId={(taskId) => {
-                    setSelectedModal(ModalType.ViewTask);
-                    setViewTask(taskId);
-                  }}
-                />
-              );
-            })}
-            <div className="grid h-screen mt-8 bg-white rounded-lg w-60 place-content-center">
-              <button className="flex items-center underline transition-all cursor-pointer decoration-transparent hover:decoration-current gap-x-2">
-                <AiOutlinePlus />
-                <p>Add new column</p>
-              </button>
-            </div>
-          </ReactSortable>
+      {data && data?.Column?.length > 1 ? (
+        <div className="flex items-start w-full overflow-x-auto overflow-y-auto">
+          <div className="h-full px-6">
+            <ReactSortable
+              list={columnsState}
+              setList={setColumnsState}
+              group={'board'}
+              animation={200}
+              delay={2}
+              handle=".column-handle"
+              className="flex mt-4 gap-x-4 "
+            >
+              {columnsState?.map(({ title, id, task }) => {
+                return (
+                  <Column
+                    task={task || []}
+                    title={title}
+                    id={id}
+                    key={id}
+                    setSelectedTaskId={(taskId) => {
+                      setSelectedModal(ModalType.ViewTask);
+                      setViewTask(taskId);
+                    }}
+                  />
+                );
+              })}
+              <div className="grid text-medium-grey font-bold text-xl h-screen mt-7 bg-white dark:bg-dark-grey rounded-lg w-[17.5rem] place-content-center ">
+                <button className="flex items-center transition-all cursor-pointer hover:text-main-purple decoration-transparent hover:decoration-current gap-x-2">
+                  <AiOutlinePlus />
+                  <p>Add new column</p>
+                </button>
+              </div>
+            </ReactSortable>
+          </div>
         </div>
-      </div>
+      ) : (
+        <EmptyBoard />
+      )}
     </>
   );
 };
