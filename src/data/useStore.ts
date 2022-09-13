@@ -1,5 +1,4 @@
-import create, { useStore } from 'zustand';
-import { Board } from '@prisma/client';
+import create from 'zustand';
 import { ModalType } from '~/components/ModalManager';
 
 interface AppStore {
