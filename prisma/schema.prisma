@@ -26,7 +26,7 @@ model Column {
   title      String
   board_id   String
   task       Task[]
-  board      Board        @relation(fields: [board_id], references: [id])
+  board      Board        @relation(fields: [board_id], references: [id], onDelete: Cascade)
   Task_Order Task_Order[]
 }
 
@@ -41,7 +41,7 @@ model Task {
   title       String
   description String
   column_id   String
-  column      Column     @relation(fields: [column_id], references: [id])
+  column      Column     @relation(fields: [column_id], references: [id], onDelete: Cascade)
   Sub_Task    Sub_Task[]
 }
 
@@ -50,12 +50,12 @@ model Sub_Task {
   title    String
   task_id  String
   complete Boolean? @default(false)
-  task     Task     @relation(fields: [task_id], references: [id])
+  task     Task     @relation(fields: [task_id], references: [id], onDelete: Cascade)
 }
 
 model Task_Order {
   id        String @id @default(uuid())
   column_id String
   order     Json
-  column    Column @relation(fields: [column_id], references: [id])
+  column    Column @relation(fields: [column_id], references: [id], onDelete: Cascade)
 }
