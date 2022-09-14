@@ -11,20 +11,9 @@ import Button from '~/components/Button';
 import EmptyBoard from '~/components/EmptyBoard';
 import DropDown from '~/components/DropDown';
 
-const DropDownItems = [
-  {
-    text: 'Edit Board',
-    action: () => [],
-  },
-  {
-    text: 'Delete Board',
-    action: () => [],
-    text_color: ' text-red',
-  },
-];
-
 const IndexPage: NextPageWithLayout = () => {
-  const { selectedBoard, setViewTask, setSelectedModal } = useAppStore();
+  const { selectedBoard, setViewTask, setSelectedModal, setDelete } =
+    useAppStore();
   const [columnsState, setColumnsState] = useState<any[]>([]);
   const { isLoading, data } = trpc.useQuery([
     'board.byId',
@@ -36,6 +25,21 @@ const IndexPage: NextPageWithLayout = () => {
       setColumnsState(data.Column);
     }
   }, [data, isLoading, selectedBoard]);
+
+  const DropDownItems = [
+    {
+      text: 'Edit Board',
+      action: () => [],
+    },
+    {
+      text: 'Delete Board',
+      action: () => {
+        setSelectedModal(ModalType.DeleteModal);
+        setDelete('board');
+      },
+      text_color: ' text-red',
+    },
+  ];
 
   if (isLoading) {
     return <div className="animate-pulse">Loading</div>;
@@ -86,7 +90,7 @@ const IndexPage: NextPageWithLayout = () => {
                   />
                 );
               })}
-              <div className="grid text-medium-grey font-bold text-xl h-screen mt-7 bg-white dark:bg-dark-grey rounded-lg w-[17.5rem] place-content-center ">
+              <div className="grid text-medium-grey font-bold text-xl h-screen mt-10 bg-white dark:bg-dark-grey rounded-lg w-[17.5rem] place-content-center ">
                 <button className="flex items-center transition-all cursor-pointer hover:text-main-purple decoration-transparent hover:decoration-current gap-x-2">
                   <AiOutlinePlus />
                   <p>Add new column</p>

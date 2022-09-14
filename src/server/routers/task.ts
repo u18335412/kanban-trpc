@@ -17,7 +17,7 @@ export const taskRouter = createRouter()
     input: z.object({
       id: z.string().uuid().optional(),
       title: z.string().min(1).max(200),
-      description: z.string().min(1).max(200),
+      description: z.string().max(200),
       column_id: z.string(),
       sub_tasks: z.array(
         z.object({
