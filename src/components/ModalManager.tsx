@@ -1,5 +1,7 @@
 import { FC } from 'react';
 import useAppStore from '~/data/useStore';
+import DeleteModal from './DeleteModal';
+import EditTaskModal from './EditTask';
 import NewBoardModal from './NewBoardModal';
 import NewTaskModal from './NewTaskModal';
 import ViewTaskModal from './ViewTaskModal';
@@ -9,6 +11,8 @@ export enum ModalType {
   NewTask = 'NewTask',
   ViewTask = 'ViewTask',
   NewBoard = 'NewBoard',
+  EditTask = 'EditTask',
+  DeleteModal = 'DeleteModal',
 }
 
 const ModalManager: FC = () => {
@@ -28,6 +32,14 @@ const ModalManager: FC = () => {
       <NewBoardModal
         closeModal={closeModal}
         isOpen={selectedModal === ModalType.NewBoard}
+      />
+      <EditTaskModal
+        closeModal={closeModal}
+        isOpen={selectedModal === ModalType.EditTask}
+      />
+      <DeleteModal
+        closeModal={closeModal}
+        isOpen={selectedModal === ModalType.DeleteModal}
       />
     </div>
   );
