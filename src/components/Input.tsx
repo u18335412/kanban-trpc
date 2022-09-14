@@ -11,6 +11,7 @@ interface InputLabelProps {
   placeholder?: string;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrorsImpl<DeepRequired<FieldValues>>;
+  value?: string;
 }
 
 const Input: FC<InputLabelProps> = ({
@@ -19,10 +20,12 @@ const Input: FC<InputLabelProps> = ({
   placeholder,
   register,
   errors,
+  value,
 }) => {
   if (type === 'textarea')
     return (
       <textarea
+        defaultValue={value}
         rows={4}
         id={id}
         placeholder={placeholder}
@@ -31,9 +34,8 @@ const Input: FC<InputLabelProps> = ({
       ></textarea>
     );
 
-  console.log(errors);
-
-  console.log('sub', errors[`${id}`]);
+  //   console.log(errors);
+  //   console.log('sub', errors[`${id}`]);
 
   return (
     <div className="relative w-full">
@@ -41,6 +43,7 @@ const Input: FC<InputLabelProps> = ({
         {...register(id, { required: true })}
         type={type}
         id={id}
+        defaultValue={value}
         className={`px-4 py-2 dark:bg-dark-grey text-sm outline-1 w-full outline-main-purple rounded placeholder:font-medium ring-[rgba(130,143,163,0.85)] ring-1 ${
           errors[`${id}`] && 'ring-red'
         } `}

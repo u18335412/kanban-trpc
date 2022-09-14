@@ -10,12 +10,13 @@ import ModalManager, { ModalType } from '~/components/ModalManager';
 import Button from '~/components/Button';
 import EmptyBoard from '~/components/EmptyBoard';
 import DropDown from '~/components/DropDown';
+import { ImSpinner8 } from 'react-icons/im';
 
 const IndexPage: NextPageWithLayout = () => {
   const { selectedBoard, setViewTask, setSelectedModal, setDelete } =
     useAppStore();
   const [columnsState, setColumnsState] = useState<any[]>([]);
-  const { isLoading, data } = trpc.useQuery([
+  const { isLoading, data, isError } = trpc.useQuery([
     'board.byId',
     { id: selectedBoard },
   ]);
@@ -42,7 +43,22 @@ const IndexPage: NextPageWithLayout = () => {
   ];
 
   if (isLoading) {
-    return <div className="animate-pulse">Loading</div>;
+    return (
+      <div className="grid h-full place-content-center">
+        <ImSpinner8 className="w-5 h-5 white animate-spin" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="grid h-full place-content-center">
+        <h2 className=" text-[5rem] text-medium-grey">500</h2>
+        <p className="font-bold text-red text-md">
+          An error has occured while fetching the data.
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -74,7 +90,7 @@ const IndexPage: NextPageWithLayout = () => {
               animation={200}
               delay={2}
               handle=".column-handle"
-              className="flex mt-4 gap-x-4 "
+              className="flex mt-4 gap-x-6"
             >
               {columnsState?.map(({ title, id, task }) => {
                 return (

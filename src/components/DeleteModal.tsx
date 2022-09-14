@@ -4,6 +4,9 @@ import { trpc } from '~/utils/trpc';
 import TransitionChild from './Transition';
 import useAppStore from '~/data/useStore';
 import Button from './Button';
+import useTheme from '~/data/useTheme';
+import { ImSpinner8 } from 'react-icons/im';
+import InputLabel from './InputLabel';
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -11,6 +14,7 @@ interface DeleteModalProps {
 }
 
 const DeleteModal: FC<DeleteModalProps> = ({ isOpen, closeModal }) => {
+  const { theme } = useTheme();
   const { deleteType, selectedBoard, viewTask } = useAppStore();
   let mutation: any = null;
   const utils = trpc.useContext();
@@ -38,7 +42,6 @@ const DeleteModal: FC<DeleteModalProps> = ({ isOpen, closeModal }) => {
       );
       return;
     }
-
     mutation.mutate(
       {
         id: viewTask,
@@ -67,10 +70,10 @@ const DeleteModal: FC<DeleteModalProps> = ({ isOpen, closeModal }) => {
             <div className="fixed inset-0 bg-black/50" />
           </TransitionChild>
 
-          <div className="fixed inset-0 overflow-y-auto">
+          <div className={`fixed inset-0 overflow-y-auto ${theme}`}>
             <div className="flex items-center justify-center min-h-full p-4 text-center">
               <TransitionChild>
-                <Dialog.Panel className="w-full max-w-md p-6 pb-10 overflow-hidden text-left align-middle transition-all transform bg-white rounded-md shadow-xl">
+                <Dialog.Panel className="w-full max-w-md p-6 pb-10 overflow-hidden text-left align-middle transition-all transform bg-white rounded-md shadow-xl dark:bg-dark-grey">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-bold leading-6 text-gray-900 text-red"
@@ -79,19 +82,37 @@ const DeleteModal: FC<DeleteModalProps> = ({ isOpen, closeModal }) => {
                   </Dialog.Title>
                   <form onSubmit={handleFormSubmit}>
                     <Dialog.Description className="mt-6 text-sm font-medium text-medium-grey">
-                      Are you sure you want to delete the{' '}
-                      <span className="font-bold underline">
-                        {data.data?.title}
-                      </span>{' '}
-                      {deleteType}? This action will remove all columns and
-                      tasks and cannot be reversed.
+                      {deleteType === 'board' ? (
+                        <>
+                          Are you sure you want to delete the
+                          <span className="font-bold underline">
+                            {' '}
+                            {data.data?.title}{' '}
+                          </span>
+                          board? This action will remove all columns and tasks
+                          and cannot be reversed.
+                        </>
+                      ) : (
+                        <>
+                          Are you sure you want to delete the{' '}
+                          <span className="font-bold underline">
+                            {data.data?.title}
+                          </span>
+                          ’ task and its subtasks? This action cannot be
+                          reversed.
+                        </>
+                      )}
                     </Dialog.Description>
                     <div className="flex justify-between w-full mt-6 h-fit gap-x-4 mt-">
                       <Button
                         type="submit"
                         className="py-2 flex text-sm justify-center w-full bg-red hover:bg-red(hover)"
                       >
-                        Delete
+                        {mutation.isLoading ? (
+                          <ImSpinner8 className="w-5 h-5 white animate-spin" />
+                        ) : (
+                          <>Delete</>
+                        )}
                       </Button>
                       <Button
                         type="submit"
@@ -100,6 +121,15 @@ const DeleteModal: FC<DeleteModalProps> = ({ isOpen, closeModal }) => {
                         Cancel
                       </Button>
                     </div>
+                    {mutation.error && (
+                      <div className="mt-4" tabIndex={0}>
+                        <InputLabel
+                          label="An error has occurred, please try again."
+                          htmlFor=""
+                          className="text-sm text-red"
+                        />
+                      </div>
+                    )}
                   </form>
                 </Dialog.Panel>
               </TransitionChild>

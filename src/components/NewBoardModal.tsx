@@ -6,6 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AiOutlineClose } from 'react-icons/ai';
 import { trpc } from '~/utils/trpc';
 import TransitionChild from './Transition';
+import InputLabel from './InputLabel';
+import Button from './Button';
+import useTheme from '~/data/useTheme';
+import Input from './Input';
+import { ImSpinner8 } from 'react-icons/im';
 
 interface NewBoardModalProps {
   isOpen: boolean;
@@ -22,9 +27,15 @@ const schema = zod.object({
 });
 
 const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
+  const { theme } = useTheme();
   const mutate = trpc.useMutation(['board.add']);
   const utils = trpc.useContext();
-  const { register, handleSubmit, control } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm({
     resolver: zodResolver(schema),
   });
   const { fields, append, remove } = useFieldArray({
@@ -54,6 +65,7 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
   };
 
   useEffect(() => {
+    remove();
     append([{ title: '' }, { title: '' }]);
   }, [append]);
 
@@ -69,76 +81,89 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
+            <div className="fixed inset-0 bg-black/50" />
           </TransitionChild>
 
-          <div className="fixed inset-0 overflow-y-auto">
+          <div className={`fixed inset-0 overflow-y-auto ${theme}`}>
             <div className="flex items-center justify-center min-h-full p-4 text-center">
               <TransitionChild>
-                <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
+                <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl dark:bg-dark-grey dark:text-white rounded-2xl">
+                  <Dialog.Title as="h3" className="text-lg leading-6 font-bol">
                     Add New Board
                   </Dialog.Title>
                   <form onSubmit={handleSubmit(handleFormSubmit)}>
-                    <div className="[&>*]:flex [&>*]:flex-col [&>*]:gap-1 flex flex-col gap-y-2 mt-2">
+                    <div className="[&>*]:flex [&>*]:flex-col [&>*]:gap-1 flex flex-col gap-y-2 mt-6">
                       <div>
-                        <label htmlFor="title" className="">
-                          Board Name
-                        </label>
-                        <input
-                          {...register('title', { required: true })}
-                          type="text"
-                          name="title"
-                          className="p-2 rounded ring-1 ring-black/50"
-                          placeholder="e.g Web Design"
+                        <InputLabel
+                          label="Board Name"
+                          htmlFor="title"
+                          className="mb-2"
+                        ></InputLabel>
+                        <Input
+                          id={'title'}
+                          register={register}
+                          errors={errors}
+                          placeholder="e.g. Web Design"
                         />
                       </div>
                       <div className="">
-                        <label htmlFor="title" className="">
-                          Board Columns
-                        </label>
-                        {fields.map(({ id }, index) => {
-                          return (
-                            <li
-                              key={id}
-                              className="flex items-center justify-between gap-x-2"
-                            >
-                              <input
-                                className="w-full p-2 rounded ring-black/50 ring-1"
-                                type="text"
-                                {...register(`columns.${index}.title`, {
-                                  required: true,
-                                })}
-                              />
-                              <button
-                                arial-label="Remove Column"
-                                onClick={() => remove(index)}
+                        <InputLabel
+                          label="Board Columns"
+                          htmlFor="title"
+                        ></InputLabel>
+                        <ul className="flex flex-col mt-2 gap-y-2">
+                          {fields.map(({ id }, index) => {
+                            return (
+                              <li
+                                key={id}
+                                className="flex items-center justify-between gap-x-2"
                               >
-                                <AiOutlineClose className="bg-white" />
-                              </button>
-                            </li>
-                          );
-                        })}
-                        <div className="mt-2">
-                          <button
+                                <Input
+                                  id={`columns.${index}.title`}
+                                  register={register}
+                                  errors={errors}
+                                />
+                                <button
+                                  arial-label="Remove Column"
+                                  onClick={() => remove(index)}
+                                >
+                                  <AiOutlineClose className="" />
+                                </button>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                        <div className="mt-3">
+                          <Button
                             onClick={(e) => addColumn(e)}
-                            className="w-full p-2 rounded-full ring-1 ring-black"
+                            className="flex justify-center w-full p-2 py-2 rounded-full text-main-purple dark:bg-white ring-1 ring-black"
                           >
-                            Add Column
-                          </button>
+                            Add New Column
+                          </Button>
                         </div>
                       </div>
-                      <div className="mt-4">
-                        <input
+                      <div className="mt-6">
+                        <Button
                           type="submit"
-                          value="Create Board"
-                          className="p-2 text-white bg-indigo-500 rounded-full cursor-pointer"
-                        />
+                          className="flex justify-center p-2 py-2 text-white bg-indigo-500 rounded-full cursor-pointer"
+                        >
+                          {mutate.isLoading ? (
+                            <ImSpinner8 className="w-5 h-5 white animate-spin" />
+                          ) : (
+                            <>Create Board</>
+                          )}
+                        </Button>
                       </div>
                     </div>
+                    {mutate.error && (
+                      <div className="mt-4" tabIndex={0}>
+                        <InputLabel
+                          label="An error has occurred, please try again."
+                          htmlFor=""
+                          className="text-sm text-red"
+                        />
+                      </div>
+                    )}
                   </form>
                 </Dialog.Panel>
               </TransitionChild>

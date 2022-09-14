@@ -12,6 +12,7 @@ import Input from './Input';
 import Button from './Button';
 import StatusSelect, { StatusItemsInterface } from './StatusSelect';
 import useTheme from '~/data/useTheme';
+import { ImSpinner8 } from 'react-icons/im';
 
 const schema = zod.object({
   title: zod.string().min(1, { message: 'Required' }),
@@ -190,7 +191,11 @@ const NewTaskModal: FC<{
                             type="submit"
                             className="flex justify-center w-full py-2"
                           >
-                            Create Task
+                            {mutation.isLoading ? (
+                              <ImSpinner8 className="w-5 h-5 white animate-spin" />
+                            ) : (
+                              <>Create Task</>
+                            )}
                           </Button>
                         </div>
                       </div>

@@ -36,6 +36,7 @@
     "@hookform/resolvers": "^2.9.7",
     "@next/bundle-analyzer": "^12.2.5",
     "@prisma/client": "^3.0.1",
+    "@radix-ui/react-toast": "^1.0.0",
     "@trpc/client": "^9.25.3",
     "@trpc/next": "^9.25.3",
     "@trpc/react": "^9.25.3",

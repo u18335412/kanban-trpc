@@ -12,6 +12,7 @@ import Input from './Input';
 import Button from './Button';
 import StatusSelect, { StatusItemsInterface } from './StatusSelect';
 import useTheme from '~/data/useTheme';
+import { ImSpinner8 } from 'react-icons/im';
 
 const schema = zod.object({
   title: zod.string().min(1, { message: 'Required' }),
@@ -29,7 +30,8 @@ const EditTaskModal: FC<{
 }> = ({ closeModal, isOpen }) => {
   const { theme } = useTheme();
   const utils = trpc.useContext();
-  const { selectedBoard } = useAppStore();
+  const { selectedBoard, viewTask } = useAppStore();
+  const task = trpc.useQuery(['task.byId', { id: viewTask }]);
   const { isLoading, data } = trpc.useQuery([
     'board.getColumns',
     { id: selectedBoard },
@@ -71,13 +73,16 @@ const EditTaskModal: FC<{
   };
 
   useEffect(() => {
+    remove();
     if (data?.Column[0]) {
       setSelected({
         value: data?.Column[0]?.id,
         text: data?.Column[0]?.title,
       });
     }
-  }, [data?.Column]);
+
+    task.data?.Sub_Task.forEach(({ title }) => append({ title: title }));
+  }, [append, data?.Column, remove, task.data?.Sub_Task]);
 
   const addSubTask = (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,6 +123,7 @@ const EditTaskModal: FC<{
                       <div>
                         <InputLabel label="Title" htmlFor="title" />
                         <Input
+                          value={task.data?.title}
                           errors={errors}
                           id="title"
                           register={register}
@@ -127,6 +133,7 @@ const EditTaskModal: FC<{
                       <div>
                         <InputLabel label="Description" htmlFor="description" />
                         <Input
+                          value={task.data?.description}
                           errors={errors}
                           type="textarea"
                           id="description"
@@ -154,7 +161,7 @@ const EditTaskModal: FC<{
                                   onClick={() => remove(index)}
                                   className="group"
                                 >
-                                  <AiOutlineClose className="transition-all bg-white group-hover:text-red" />
+                                  <AiOutlineClose className="transition-all group-hover:text-red" />
                                 </button>
                               </li>
                             );
@@ -190,7 +197,11 @@ const EditTaskModal: FC<{
                             type="submit"
                             className="flex justify-center w-full py-2"
                           >
-                            Create Task
+                            {mutation.isLoading ? (
+                              <ImSpinner8 className="w-5 h-5 white animate-spin" />
+                            ) : (
+                              <>Save changes</>
+                            )}
                           </Button>
                         </div>
                       </div>
