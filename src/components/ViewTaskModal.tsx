@@ -1,20 +1,52 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, FC } from 'react';
+import { Fragment, FC, useState, useEffect } from 'react';
 import { trpc } from '~/utils/trpc';
 import useAppStore from '~/data/useStore';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import TransitionChild from './Transition';
-import StatusSelect from './StatusSelect';
+import StatusSelect, { StatusItemsInterface } from './StatusSelect';
 import useTheme from '~/data/useTheme';
+import DropDown from './DropDown';
+import { ModalType } from './ModalManager';
 
 const ViewTaskModal: FC<{
   closeModal: () => void;
   isOpen: boolean;
 }> = ({ closeModal, isOpen }) => {
-  const { viewTask, selectedBoard } = useAppStore();
+  const { viewTask, selectedBoard, setSelectedModal, setDelete } =
+    useAppStore();
   const { theme } = useTheme();
   const task = trpc.useQuery(['task.byId', { id: viewTask }]);
   const board = trpc.useQuery(['board.byId', { id: selectedBoard }]);
+  const [selected, setSelected] = useState<StatusItemsInterface | undefined>({
+    value: board?.data?.Column[0]?.id || '',
+    text: board?.data?.Column[0]?.title || '',
+  });
+
+  const DropDownItems = [
+    {
+      text: 'Edit Task',
+      action: () => setSelectedModal(ModalType.EditTask),
+    },
+    {
+      text: 'Delete Task',
+      action: () => {
+        setDelete('task');
+        setSelectedModal(ModalType.DeleteModal);
+      },
+      text_color: ' text-red',
+    },
+  ];
+
+  useEffect(() => {
+    if (board?.data?.Column[0]) {
+      setSelected({
+        value: board?.data?.Column[0]?.id,
+        text: board?.data?.Column[0]?.title,
+      });
+    }
+  }, [board?.data?.Column]);
+
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -37,7 +69,7 @@ const ViewTaskModal: FC<{
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex items-center justify-center min-h-full p-4 text-center">
               <TransitionChild>
-                <Dialog.Panel className="w-full max-w-[28rem] p-6  text-left align-middle transition-all transform dark:bg-dark-grey bg-white shadow-xl rounded-2xl dark:text-white">
+                <Dialog.Panel className="w-full max-w-[28rem] p-6  text-left align-middle transition-all transform dark:bg-dark-grey bg-white shadow-xl rounded-md dark:text-white">
                   {task.isLoading ? (
                     <div className="text-xl animate-pulse">Loading</div>
                   ) : (
@@ -47,9 +79,13 @@ const ViewTaskModal: FC<{
                         className="flex items-center justify-between text-lg font-bold leading-6 text-gray-900"
                       >
                         <span className="w-full">{task.data?.title}</span>
-                        <button aria-roledescription="Options">
-                          <BsThreeDotsVertical />
-                        </button>
+                        <div>
+                          <DropDown
+                            className=" -right-[500%] mt-5"
+                            icon={<BsThreeDotsVertical />}
+                            items={DropDownItems}
+                          />
+                        </div>
                       </Dialog.Title>
                       <div className="mt-6">
                         <p className="text-sm font-medium text-medium-grey">
@@ -77,7 +113,7 @@ const ViewTaskModal: FC<{
                                       type="checkbox"
                                       name={id}
                                       id={id}
-                                      className="w-4 h-4 pointer-events-none accent-main-purple "
+                                      className="w-4 h-4 rounded-full pointer-events-none accent-main-purple"
                                     />
                                     <label
                                       htmlFor={id}
@@ -102,20 +138,14 @@ const ViewTaskModal: FC<{
                         <p className="text-xs font-bold text-medium-grey">
                           Current Status
                         </p>
-                        {/* <select
-                          className="w-full p-2 mt-1 rounded ring-1"
-                          defaultValue={task.data?.column_id}
-                        >
-                          {board.data?.Column.map(({ id, title }) => {
-                            return (
-                              <option key={id} value={id}>
-                                {title}
-                              </option>
-                            );
-                          })}
-                        </select> */}
                         <div className="mt-2">
-                          <StatusSelect statusItems={board.data?.Column} />
+                          <StatusSelect
+                            selected={selected}
+                            setSelected={setSelected}
+                            statusItems={board.data?.Column.map(
+                              ({ id, title }) => ({ value: id, text: title }),
+                            )}
+                          />
                         </div>
                       </div>
                     </>
