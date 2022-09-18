@@ -1,7 +1,6 @@
 import { Menu, Transition } from '@headlessui/react';
 import { FC, ReactNode } from 'react';
-import TransitionChild from './Transition';
-
+import { clsx } from 'clsx';
 interface DropDownItemInterface {
   text: string;
   action: () => void;
@@ -36,13 +35,16 @@ const DropDown: FC<DropDownProps> = ({ items, text, icon, className }) => {
         <Menu.Items
           className={`absolute right-0 flex flex-col w-48 p-4 mt-8 origin-top-right bg-white rounded-md shadow-lg min-w-fit dark:bg-very-dark-grey gap-y-4 ${className}`}
         >
-          {items.map(({ text, action, text_color }) => {
+          {items.map(({ text, action, text_color = 'text-medium-grey' }) => {
             return (
               <div key={text + action}>
                 <Menu.Item>
                   <button
                     onClick={action}
-                    className={`group text-medium-grey font-medium flex w-full items-center rounded-md text-sm ${text_color}`}
+                    className={clsx(
+                      'group font-medium flex w-full items-center rounded-md text-sm',
+                      text_color,
+                    )}
                   >
                     {text}
                   </button>

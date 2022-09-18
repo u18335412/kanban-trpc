@@ -14,7 +14,7 @@ const EmptyBoard: FC = () => {
         </p>
         <Button
           icon={<AiOutlinePlus />}
-          onClick={() => setSelectedModal(ModalType.NewTask)}
+          onClick={() => setSelectedModal(ModalType.EditBoard)}
         >
           Add New Column
         </Button>

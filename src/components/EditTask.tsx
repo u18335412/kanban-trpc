@@ -32,20 +32,15 @@ const EditTaskModal: FC<{
   const utils = trpc.useContext();
   const { selectedBoard, viewTask } = useAppStore();
   const task = trpc.useQuery(['task.byId', { id: viewTask }]);
-  const { isLoading, data } = trpc.useQuery([
-    'board.getColumns',
-    { id: selectedBoard },
-  ]);
-  const [selected, setSelected] = useState<StatusItemsInterface | undefined>({
-    value: data?.Column[0]?.id || '',
-    text: data?.Column[0]?.title || '',
-  });
+  const { data } = trpc.useQuery(['board.getColumns', { id: selectedBoard }]);
+  const [selected, setSelected] = useState<StatusItemsInterface | undefined>();
   const mutation = trpc.useMutation(['task.add']);
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
+    reset,
   } = useForm({
     resolver: zodResolver(schema),
   });
@@ -73,16 +68,23 @@ const EditTaskModal: FC<{
   };
 
   useEffect(() => {
+    reset();
     remove();
-    if (data?.Column[0]) {
-      setSelected({
-        value: data?.Column[0]?.id,
-        text: data?.Column[0]?.title,
-      });
-    }
-
     task.data?.Sub_Task.forEach(({ title }) => append({ title: title }));
-  }, [append, data?.Column, remove, task.data?.Sub_Task]);
+  }, [append, remove, task.data?.Sub_Task, reset]);
+
+  useEffect(() => {
+    if (data?.Column) {
+      setSelected(
+        data?.Column.filter((column) => column.id === task.data?.column_id).map(
+          (item) => ({
+            value: item?.id || '',
+            text: item?.title || '',
+          }),
+        )[0],
+      );
+    }
+  }, [data?.Column, task.data?.column_id]);
 
   const addSubTask = (e: React.FormEvent) => {
     e.preventDefault();

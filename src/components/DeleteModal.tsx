@@ -6,7 +6,6 @@ import useAppStore from '~/data/useStore';
 import Button from './Button';
 import useTheme from '~/data/useTheme';
 import { ImSpinner8 } from 'react-icons/im';
-import InputLabel from './InputLabel';
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -15,7 +14,7 @@ interface DeleteModalProps {
 
 const DeleteModal: FC<DeleteModalProps> = ({ isOpen, closeModal }) => {
   const { theme } = useTheme();
-  const { deleteType, selectedBoard, viewTask } = useAppStore();
+  const { deleteType, selectedBoard, viewTask, toast } = useAppStore();
   let mutation: any = null;
   const utils = trpc.useContext();
   let data = null;
@@ -36,7 +35,11 @@ const DeleteModal: FC<DeleteModalProps> = ({ isOpen, closeModal }) => {
         {
           onSuccess: () => {
             utils.invalidateQueries(['board.all']);
+            toast.success('Board deleted successfully.');
             closeModal();
+          },
+          onError: () => {
+            toast.error('An error has occured while deleting the board.');
           },
         },
       );
@@ -48,11 +51,20 @@ const DeleteModal: FC<DeleteModalProps> = ({ isOpen, closeModal }) => {
       },
       {
         onSuccess: () => {
+          toast.success('Task deleted successfully.');
           utils.invalidateQueries(['board.byId', { id: selectedBoard }]);
           closeModal();
         },
+        onError: () => {
+          toast.error('An error has occured while deleting the task.');
+        },
       },
     );
+  };
+
+  const handleCancel = (e: any) => {
+    e.preventDefault();
+    closeModal();
   };
 
   return (
@@ -115,21 +127,13 @@ const DeleteModal: FC<DeleteModalProps> = ({ isOpen, closeModal }) => {
                         )}
                       </Button>
                       <Button
+                        onClick={handleCancel}
                         type="submit"
                         className="flex justify-center w-full py-2 text-sm bg-white text-main-purple hover:bg-main-purple/25"
                       >
                         Cancel
                       </Button>
                     </div>
-                    {mutation.error && (
-                      <div className="mt-4" tabIndex={0}>
-                        <InputLabel
-                          label="An error has occurred, please try again."
-                          htmlFor=""
-                          className="text-sm text-red"
-                        />
-                      </div>
-                    )}
                   </form>
                 </Dialog.Panel>
               </TransitionChild>
