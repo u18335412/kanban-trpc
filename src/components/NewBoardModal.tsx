@@ -3,7 +3,7 @@ import { FC, FormEvent, Fragment, useEffect } from 'react';
 import { useForm, useFieldArray, FieldValues } from 'react-hook-form';
 import * as zod from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AiOutlineClose } from 'react-icons/ai';
+import { AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
 import { trpc } from '~/utils/trpc';
 import TransitionChild from './Transition';
 import InputLabel from './InputLabel';
@@ -11,6 +11,7 @@ import Button from './Button';
 import useTheme from '~/data/useTheme';
 import Input from './Input';
 import { ImSpinner8 } from 'react-icons/im';
+import useAppStore from '~/data/useStore';
 
 interface NewBoardModalProps {
   isOpen: boolean;
@@ -19,15 +20,18 @@ interface NewBoardModalProps {
 
 const schema = zod.object({
   title: zod.string().min(1, { message: 'Required' }),
-  columns: zod.array(
-    zod.object({
-      title: zod.string().min(1, { message: 'Required' }),
-    }),
-  ),
+  columns: zod
+    .array(
+      zod.object({
+        title: zod.string().min(1, { message: 'Required' }),
+      }),
+    )
+    .optional(),
 });
 
 const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
   const { theme } = useTheme();
+  const { toast } = useAppStore();
   const mutate = trpc.useMutation(['board.add']);
   const utils = trpc.useContext();
   const {
@@ -35,12 +39,16 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
     handleSubmit,
     formState: { errors },
     control,
+    reset,
   } = useForm({
     resolver: zodResolver(schema),
+    defaultValues: {
+      columns: [{ title: 'Todo' }, { title: 'Doing' }],
+    },
   });
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'sub_tasks',
+    name: 'columns',
     rules: { minLength: 1 },
   });
 
@@ -52,8 +60,13 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
       },
       {
         onSuccess: () => {
+          reset();
+          toast.success('Board created successfully.');
           utils.invalidateQueries(['board.all']);
           closeModal();
+        },
+        onError: () => {
+          toast.error('An error has occured while adding board.');
         },
       },
     );
@@ -66,8 +79,8 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
 
   useEffect(() => {
     remove();
-    append([{ title: '' }, { title: '' }]);
-  }, [append]);
+    reset();
+  }, [remove, reset, isOpen]);
 
   return (
     <>
@@ -88,11 +101,11 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
             <div className="flex items-center justify-center min-h-full p-4 text-center">
               <TransitionChild>
                 <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl dark:bg-dark-grey dark:text-white rounded-2xl">
-                  <Dialog.Title as="h3" className="text-lg leading-6 font-bol">
+                  <Dialog.Title as="h3" className="text-lg font-bold leading-6">
                     Add New Board
                   </Dialog.Title>
                   <form onSubmit={handleSubmit(handleFormSubmit)}>
-                    <div className="[&>*]:flex [&>*]:flex-col [&>*]:gap-1 flex flex-col gap-y-2 mt-6">
+                    <div className="[&>*]:flex [&>*]:flex-col [&>*]:gap-1 flex flex-col gap-y-6 mt-6">
                       <div>
                         <InputLabel
                           label="Board Name"
@@ -100,7 +113,7 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
                           className="mb-2"
                         ></InputLabel>
                         <Input
-                          id={'title'}
+                          id="title"
                           register={register}
                           errors={errors}
                           placeholder="e.g. Web Design"
@@ -111,7 +124,7 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
                           label="Board Columns"
                           htmlFor="title"
                         ></InputLabel>
-                        <ul className="flex flex-col mt-2 gap-y-2">
+                        <ul className="flex flex-col mt-2 gap-y-3">
                           {fields.map(({ id }, index) => {
                             return (
                               <li
@@ -135,6 +148,7 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
                         </ul>
                         <div className="mt-3">
                           <Button
+                            icon={<AiOutlinePlus />}
                             onClick={(e) => addColumn(e)}
                             className="flex justify-center w-full p-2 py-2 rounded-full text-main-purple dark:bg-white ring-1 ring-black"
                           >
@@ -155,15 +169,6 @@ const NewBoardModal: FC<NewBoardModalProps> = ({ isOpen, closeModal }) => {
                         </Button>
                       </div>
                     </div>
-                    {mutate.error && (
-                      <div className="mt-4" tabIndex={0}>
-                        <InputLabel
-                          label="An error has occurred, please try again."
-                          htmlFor=""
-                          className="text-sm text-red"
-                        />
-                      </div>
-                    )}
                   </form>
                 </Dialog.Panel>
               </TransitionChild>

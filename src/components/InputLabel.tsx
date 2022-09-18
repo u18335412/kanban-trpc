@@ -9,7 +9,7 @@ const InputLabel: FC<InputLabelProps> = ({ label, htmlFor, className }) => {
   return (
     <label
       htmlFor={htmlFor}
-      className={`text-xs font-bold text-medium-grey ${className}`}
+      className={`text-xs font-bold dark:text-white text-medium-grey ${className}`}
     >
       {label}
     </label>

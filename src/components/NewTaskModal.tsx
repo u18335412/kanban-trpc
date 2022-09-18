@@ -30,11 +30,8 @@ const NewTaskModal: FC<{
 }> = ({ closeModal, isOpen }) => {
   const { theme } = useTheme();
   const utils = trpc.useContext();
-  const { selectedBoard } = useAppStore();
-  const { isLoading, data } = trpc.useQuery([
-    'board.getColumns',
-    { id: selectedBoard },
-  ]);
+  const { selectedBoard, toast } = useAppStore();
+  const { data } = trpc.useQuery(['board.getColumns', { id: selectedBoard }]);
   const [selected, setSelected] = useState<StatusItemsInterface | undefined>({
     value: data?.Column[0]?.id || '',
     text: data?.Column[0]?.title || '',
@@ -45,13 +42,22 @@ const NewTaskModal: FC<{
     handleSubmit,
     formState: { errors },
     control,
+    reset,
   } = useForm({
     resolver: zodResolver(schema),
+    defaultValues: {
+      sub_tasks: [
+        { placeholder: 'e.g. Make coffee', title: '' },
+        {
+          placeholder: 'e.g. Drink coffee and smile',
+          title: '',
+        },
+      ],
+    },
   });
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'sub_tasks',
-    rules: { minLength: 1 },
   });
 
   const handleFormSubmit = (validatedData: FieldValues) => {
@@ -59,13 +65,18 @@ const NewTaskModal: FC<{
       {
         title: validatedData.title,
         description: validatedData.description,
-        column_id: validatedData.column_id,
+        column_id: selected?.value || '',
         sub_tasks: validatedData.sub_tasks,
       },
       {
         onSuccess: () => {
+          toast.success('Task added successfully.');
           utils.invalidateQueries(['board.byId', { id: selectedBoard }]);
+          reset();
           closeModal();
+        },
+        onError: () => {
+          toast.error('An error has occured while adding task.');
         },
       },
     );
@@ -80,9 +91,13 @@ const NewTaskModal: FC<{
     }
   }, [data?.Column]);
 
+  useEffect(() => {
+    reset();
+  }, [isOpen, reset]);
+
   const addSubTask = (e: React.FormEvent) => {
     e.preventDefault();
-    append({ title: '' });
+    append({ title: '', placeholder: '' });
   };
 
   return (
@@ -138,7 +153,7 @@ const NewTaskModal: FC<{
                       <div className="flex">
                         <InputLabel label="Subtasks" htmlFor="Subtasks" />
                         <ul className="flex flex-col mt-2 gap-y-2">
-                          {fields.map(({ id }, index) => {
+                          {fields.map(({ id, placeholder }, index) => {
                             return (
                               <li
                                 key={id}
@@ -148,14 +163,14 @@ const NewTaskModal: FC<{
                                   errors={errors}
                                   id={`sub_tasks.${index}.title`}
                                   register={register}
-                                  placeholder=""
+                                  placeholder={placeholder}
                                 />
                                 <button
                                   arial-label="Remove task"
                                   onClick={() => remove(index)}
                                   className="group"
                                 >
-                                  <AiOutlineClose className="transition-all bg-white group-hover:text-red" />
+                                  <AiOutlineClose className="transition-all group-hover:text-red" />
                                 </button>
                               </li>
                             );

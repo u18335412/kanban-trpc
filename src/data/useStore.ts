@@ -1,6 +1,9 @@
 import create from 'zustand';
 import { ModalType } from '~/components/ModalManager';
+import { toast } from 'react-toastify';
+
 interface AppStore {
+  toast: any;
   deleteType: 'board' | 'task';
   selectedBoard: string;
   viewTask: string;
@@ -12,6 +15,7 @@ interface AppStore {
 }
 
 const useAppStore = create<AppStore>((set) => ({
+  toast: toast,
   deleteType: 'board',
   selectedBoard: '',
   viewTask: '',

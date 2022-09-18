@@ -1,6 +1,7 @@
-import { Fragment, useState, FC } from 'react';
+import { Fragment, FC } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import useTheme from '~/data/useTheme';
+import { FiChevronDown } from 'react-icons/fi';
 export interface StatusItemsInterface {
   value: string;
   text: string;
@@ -21,13 +22,10 @@ const StatusSelect: FC<StatusSelectProps> = ({
     <div className={theme}>
       <Listbox value={selected} onChange={setSelected}>
         <div className="relative">
-          <Listbox.Button className="relative w-full px-4 py-2 text-left ring-1 dark:ring-[rgba(130,143,163,0.25)] rounded-[4px] focus:ring-main-purple font-medium text-sm">
+          <Listbox.Button className="relative w-full px-4 py-2 text-left ring-1 dark:ring-[rgba(130,143,163,0.25)] rounded-[4px] outline-1 hover:outline outline-main-purple font-medium text-sm">
             <span className="block truncate">{selected?.text}</span>
             <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              {/* <ChevronUpDownIcon
-                className="w-5 h-5 text-gray-400"
-                aria-hidden="true"
-              /> */}
+              <FiChevronDown className="w-5 h-5 text-main-purple" />
             </span>
           </Listbox.Button>
           <Transition
@@ -50,22 +48,9 @@ const StatusSelect: FC<StatusSelectProps> = ({
                   }
                   value={column}
                 >
-                  {({ selected: any }) => (
-                    <>
-                      <span
-                        className={`block truncate ${
-                          selected ? 'font-medium' : 'font-normal'
-                        }`}
-                      >
-                        {column.text}
-                      </span>
-                      {selected ? (
-                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                          {/* <CheckIcon className="w-5 h-5" aria-hidden="true" /> */}
-                        </span>
-                      ) : null}
-                    </>
-                  )}
+                  <span className="block truncate transition-all cursor-pointer  hover:text-white">
+                    {column.text}
+                  </span>
                 </Listbox.Option>
               ))}
             </Listbox.Options>

@@ -48,7 +48,7 @@ const SideBar: FC = () => {
       >
         <button
           onClick={() => setHideSideBar((prev) => !prev)}
-          className="absolute flex items-center justify-center h-12 rounded-r-full bottom-8 bg-main-purple w-14"
+          className="absolute flex items-center justify-center h-12 rounded-r-full bottom-8 bg-main-purple hover:bg-main-purple(hover) w-14"
         >
           <img src="/assets/icon-show-sidebar.svg" alt="show sidebar" />
         </button>

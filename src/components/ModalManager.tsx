@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import useAppStore from '~/data/useStore';
 import DeleteModal from './DeleteModal';
+import EditBoardModal from './EditBoardModal';
 import EditTaskModal from './EditTask';
 import NewBoardModal from './NewBoardModal';
 import NewTaskModal from './NewTaskModal';
@@ -13,11 +14,14 @@ export enum ModalType {
   NewBoard = 'NewBoard',
   EditTask = 'EditTask',
   DeleteModal = 'DeleteModal',
+  EditBoard = 'EditBoard',
 }
 
 const ModalManager: FC = () => {
   const { selectedModal, setSelectedModal } = useAppStore();
   const closeModal = () => setSelectedModal(ModalType.None);
+
+  // const DynamicViewTaskModal = dynamic(() => import('./ViewTaskModal'));
 
   return (
     <div>
@@ -40,6 +44,10 @@ const ModalManager: FC = () => {
       <DeleteModal
         closeModal={closeModal}
         isOpen={selectedModal === ModalType.DeleteModal}
+      />
+      <EditBoardModal
+        closeModal={closeModal}
+        isOpen={selectedModal === ModalType.EditBoard}
       />
     </div>
   );
