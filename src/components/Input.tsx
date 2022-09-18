@@ -1,17 +1,14 @@
-import { FC } from 'react';
-import {
-  UseFormRegister,
-  FieldValues,
-  FieldErrorsImpl,
-  DeepRequired,
-} from 'react-hook-form';
+import { FC, useState } from 'react';
+import { ErrorMessage } from '@hookform/error-message';
+
 interface InputLabelProps {
   id: string;
   type?: string;
   placeholder?: string;
-  register: UseFormRegister<FieldValues>;
-  errors: FieldErrorsImpl<DeepRequired<FieldValues>>;
+  register: any;
+  errors: any;
   value?: string;
+  className?: string;
 }
 
 const Input: FC<InputLabelProps> = ({
@@ -21,7 +18,9 @@ const Input: FC<InputLabelProps> = ({
   register,
   errors,
   value,
+  className,
 }) => {
+  const [error, setError] = useState<boolean>(false);
   if (type === 'textarea')
     return (
       <textarea
@@ -30,30 +29,34 @@ const Input: FC<InputLabelProps> = ({
         id={id}
         placeholder={placeholder}
         {...register(id, { required: true })}
-        className="px-4 py-2 dark:bg-dark-grey  text-sm outline-1 w-full outline-main-purple rounded placeholder:font-medium ring-[rgba(130,143,163,0.25)] ring-1"
+        className={`px-4 py-2 dark:bg-dark-grey focus:outline text-sm outline-1 w-full outline-main-purple rounded font-medium placeholder:font-medium ring-[rgba(130,143,163,0.25)] ring-1 ${className}}`}
       ></textarea>
     );
-
-  //   console.log(errors);
-  //   console.log('sub', errors[`${id}`]);
 
   return (
     <div className="relative w-full">
       <input
-        {...register(id, { required: true })}
+        {...register(`${id}` as const, { required: true })}
         type={type}
         id={id}
         defaultValue={value}
-        className={`px-4 py-2 dark:bg-dark-grey text-sm outline-1 w-full outline-main-purple rounded placeholder:font-medium ring-[rgba(130,143,163,0.85)] ring-1 ${
-          errors[`${id}`] && 'ring-red'
-        } `}
+        className={`px-4 py-2 dark:bg-dark-grey text-sm outline-1 focus:outline w-full rounded placeholder:font-medium font-medium focus:ring-0 outline-main-purple ring-[rgba(130,143,163,0.25)] ring-1 ${
+          error && 'ring-red'
+        } ${className}`}
         placeholder={placeholder}
       />
-      {errors[`${id}`] && (
-        <p className="absolute text-sm font-medium right-4 top-2 text-red">
-          Can&apos;t be empty
-        </p>
-      )}
+      <ErrorMessage
+        errors={errors}
+        name={id}
+        render={() => {
+          setError(true);
+          return (
+            <p className="absolute text-sm font-medium right-4 top-2 text-red">
+              Can&apos;t be empty
+            </p>
+          );
+        }}
+      />
     </div>
   );
 };
