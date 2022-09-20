@@ -3,7 +3,7 @@ import { FC, FormEvent, Fragment, useEffect, useState } from 'react';
 import { useForm, useFieldArray, FieldValues } from 'react-hook-form';
 import * as zod from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AiOutlineClose } from 'react-icons/ai';
+import { AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
 import { trpc } from '~/utils/trpc';
 import TransitionChild from './Transition';
 import InputLabel from './InputLabel';
@@ -185,8 +185,9 @@ const EditBoardModal: FC<EditBoardModalProps> = ({ isOpen, closeModal }) => {
                         </ul>
                         <div className="mt-3">
                           <Button
+                            icon={<AiOutlinePlus />}
                             onClick={(e) => addColumn(e)}
-                            className="flex justify-center w-full p-2 py-2 bg-white rounded-full text-main-purple "
+                            className="flex justify-center w-full p-2 py-2  rounded-full text-main-purple bg-white"
                           >
                             Add New Column
                           </Button>
@@ -195,7 +196,7 @@ const EditBoardModal: FC<EditBoardModalProps> = ({ isOpen, closeModal }) => {
                       <div className="mt-6">
                         <Button
                           type="submit"
-                          className="flex justify-center p-2 py-2 text-white bg-indigo-500 rounded-full cursor-pointer"
+                          className="flex justify-center p-2 py-2 text-white bg-indigo-500 rounded-full cursor-pointer bg-main-purple"
                         >
                           {mutate.isLoading ? (
                             <ImSpinner8 className="w-5 h-5 white animate-spin" />

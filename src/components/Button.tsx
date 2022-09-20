@@ -23,7 +23,7 @@ const Button: FC<ButtonProps> = ({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`font-bold text-md bg-main-purple hover:bg-main-purple(hover) rounded-full text-white px-[1.5rem] py-[0.938rem] transition-all flex gap-x-1 items-center ${className} disabled:opacity-25 disabled:cursor-not-allowed`}
+      className={`font-bold text-md rounded-full text-white px-[1.5rem] py-[0.938rem] transition-all flex gap-x-1 items-center disabled:opacity-25 disabled:cursor-not-allowed ${className}`}
     >
       <span>{icon}</span>
       {children}

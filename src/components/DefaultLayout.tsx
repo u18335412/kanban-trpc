@@ -17,7 +17,9 @@ export const DefaultLayout = ({ children }: DefaultLayoutProps) => {
         <title>Kanban</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className={`flex max-h-screen ${stateTheme}`}>
+      <div
+        className={`flex max-h-screen ${stateTheme} selection:text-main-purple selection:bg-white`}
+      >
         <SideBar />
         <main
           className="w-full max-h-screen h-screen overflow-x-auto overflow-y-auto dark:bg-very-dark-grey bg-light-grey dark:text-white [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]

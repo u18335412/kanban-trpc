@@ -197,7 +197,7 @@ const EditTaskModal: FC<{
                         <div className="mt-6">
                           <Button
                             type="submit"
-                            className="flex justify-center w-full py-2"
+                            className="flex justify-center w-full py-2 bg-main-purple hover:bg-main-purple(hover)"
                           >
                             {mutation.isLoading ? (
                               <ImSpinner8 className="w-5 h-5 white animate-spin" />

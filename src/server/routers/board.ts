@@ -40,6 +40,9 @@ export const boardRouter = createRouter()
     async resolve() {
       return prisma.board.findMany({
         select: { ...defaultboardSelect },
+        orderBy: {
+          title: 'asc',
+        },
       });
     },
   })

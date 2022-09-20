@@ -6,7 +6,7 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 import ListItem from './ListItem';
 // import useAppStore from '~/data/useStore';
 
-type ExtendedTask = TaskType & { Sub_Task: Sub_Task[] };
+export type ExtendedTask = TaskType & { Sub_Task: Sub_Task[] };
 interface ColumnProps {
   task: ExtendedTask[];
   title: string;
@@ -52,7 +52,7 @@ const Column: FC<ColumnProps> = ({
     <Draggable draggableId={id} index={index}>
       {(provided) => (
         <div
-          className="transition-all w-[17.5rem] min-w-[17.5rem] h-screen"
+          className="max-w-[17.5rem] min-w-[17.5rem] h-screen mr-6"
           {...provided.draggableProps}
           ref={provided.innerRef}
         >

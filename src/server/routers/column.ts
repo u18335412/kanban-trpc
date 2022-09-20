@@ -33,6 +33,9 @@ export const columnRouter = createRouter()
     async resolve() {
       return prisma.column.findMany({
         select: defaultColumnSelect,
+        orderBy: {
+          title: 'asc',
+        },
       });
     },
   })

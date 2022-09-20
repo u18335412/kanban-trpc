@@ -16,6 +16,7 @@ const SideBar: FC = () => {
   const { setSelectedBoard, selectedBoard, setSelectedModal } = useAppStore();
   const { isLoading, data } = trpc.useQuery(['board.all']);
   const [themeImage, setThemeImage] = useState<string>(themeImages[0] || '');
+
   const updateSelectedBoard = (id: string) => {
     setSelectedBoard(id);
   };
@@ -91,7 +92,7 @@ const SideBar: FC = () => {
                         }`}
                         />
                         <span
-                          className={`w-full  ${
+                          className={`w-full ${
                             selectedBoard === id
                               ? ' text-white '
                               : 'text-medium-grey group-hover:text-main-purple'
