@@ -24,7 +24,7 @@
     "postinstall": "prisma generate"
   },
   "prisma": {
-    "seed": "doppler run npx ts-node prisma/seed.ts"
+    "seed": "doppler run npx ts-node prisma/seed.js"
   },
   "prettier": {
     "printWidth": 80,
