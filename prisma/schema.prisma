@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -11,12 +8,12 @@ generator client {
 }
 
 model Column {
-  id         String @id @default(uuid())
-  title      String
-  board_id   String
-  task       Task[]
-  board      Board  @relation(fields: [board_id], references: [id], onDelete: Cascade)
-  task_order Json?
+  id        String @id @default(uuid())
+  title     String
+  board_id  String
+  task      Task[]
+  board     Board  @relation(fields: [board_id], references: [id], onDelete: Cascade)
+  taskOrder String?
 }
 
 model Board {
