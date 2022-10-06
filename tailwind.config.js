@@ -5,13 +5,6 @@ module.exports = {
     './src/pages/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    fontSize: {
-      xl: '1.5rem',
-      lg: '1.125rem',
-      md: '0.938rem',
-      sm: '0.813rem',
-      xs: '0.75rem',
-    },
     colors: {
       black: 'rgba(0,1,18,1)',
       'very-dark-grey': 'rgba(32,33,44,1)',
@@ -26,7 +19,15 @@ module.exports = {
       red: 'rgba(234,85,85,1)',
       'red(hover)': 'rgba(255, 152, 152, 1)',
     },
-    extend: {},
+    extend: {
+      fontSize: {
+        xl: '1.5rem',
+        lg: '1.125rem',
+        md: '0.938rem',
+        sm: '0.813rem',
+        xs: '0.75rem',
+      },
+    },
   },
   plugins: [],
   darkMode: 'class',
