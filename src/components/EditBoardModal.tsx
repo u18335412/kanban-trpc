@@ -195,6 +195,7 @@ const EditBoardModal: FC<EditBoardModalProps> = ({ isOpen, closeModal }) => {
                       </div>
                       <div className="mt-6">
                         <Button
+                          disabled={mutate.isLoading}
                           type="submit"
                           className="flex justify-center p-2 py-2 text-white bg-indigo-500 rounded-full cursor-pointer bg-main-purple"
                         >
