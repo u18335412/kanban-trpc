@@ -12,7 +12,7 @@ const defaultColumnSelect = Prisma.validator<Prisma.ColumnSelect>()({
       Sub_Task: true,
     },
   },
-  task_order: true,
+//   task_order: true,
 });
 
 export const columnRouter = createRouter()
@@ -86,24 +86,24 @@ export const columnRouter = createRouter()
       };
     },
   })
-  .mutation('updateOrder', {
-    input: z.object({
-      id: z.string().uuid(),
-      data: z.object({
-        order: z.array(z.string()),
-      }),
-    }),
-    async resolve({ input }) {
-      const {
-        id,
-        data: { order },
-      } = input;
-      return prisma.column.update({
-        where: { id },
-        data: {
-          task_order: order,
-        },
-        select: defaultColumnSelect,
-      });
-    },
-  });
+//   .mutation('updateOrder', {
+//     input: z.object({
+//       id: z.string().uuid(),
+//       data: z.object({
+//         order: z.array(z.string()),
+//       }),
+//     }),
+//     async resolve({ input }) {
+//       const {
+//         id,
+//         data: { order },
+//       } = input;
+//       return prisma.column.update({
+//         where: { id },
+//         data: {
+//           task_order: order,
+//         },
+//         select: defaultColumnSelect,
+//       });
+//     },
+//   });
