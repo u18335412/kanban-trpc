@@ -39,7 +39,7 @@ export const boardRouter = createRouter()
   .query('all', {
     async resolve() {
       return prisma.board.findMany({
-        select: { ...defaultboardSelect },
+        select: { id: true, title: true },
         orderBy: {
           title: 'asc',
         },
@@ -159,6 +159,25 @@ export const boardRouter = createRouter()
           },
         },
       });
+
+      const updatedBoard = prisma.board.findUnique({
+        where: {
+          id: id,
+        },
+        select: {
+          columnOrder: true,
+        },
+      });
+
+      // update board column order.
+      // await prisma.board.update({
+      //   where: {
+      //     id: id,
+      //   },
+      //   data: {
+      //     columnOrder: updatedBoard?.columnOrder,
+      //   },
+      // });
 
       return board;
     },

@@ -6,6 +6,7 @@ import useAppStore from '~/data/useStore';
 import Button from './Button';
 import useTheme from '~/data/useTheme';
 import { ImSpinner8 } from 'react-icons/im';
+import Loading from './Loading';
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -34,12 +35,12 @@ const DeleteModal: FC<DeleteModalProps> = ({ isOpen, closeModal }) => {
         },
         {
           onSuccess: () => {
+            closeModal();
             utils.invalidateQueries(['board.all']);
             toast.success('Board deleted successfully.');
-            closeModal();
           },
           onError: () => {
-            toast.error('An error has occured while deleting the board.');
+            toast.error('An error has occurred while deleting the board.');
           },
         },
       );
@@ -51,8 +52,8 @@ const DeleteModal: FC<DeleteModalProps> = ({ isOpen, closeModal }) => {
       },
       {
         onSuccess: () => {
-          toast.success('Task deleted successfully.');
           utils.invalidateQueries(['board.byId', { id: selectedBoard }]);
+          toast.success('Task deleted successfully.');
           closeModal();
         },
         onError: () => {
@@ -120,11 +121,7 @@ const DeleteModal: FC<DeleteModalProps> = ({ isOpen, closeModal }) => {
                         type="submit"
                         className="py-2 flex text-sm justify-center w-full bg-red hover:bg-red(hover)"
                       >
-                        {mutation.isLoading ? (
-                          <ImSpinner8 className="w-5 h-5 white animate-spin" />
-                        ) : (
-                          <>Delete</>
-                        )}
+                        {mutation.isLoading ? <Loading /> : <span>Delete</span>}
                       </Button>
                       <Button
                         onClick={handleCancel}

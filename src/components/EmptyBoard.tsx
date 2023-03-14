@@ -13,6 +13,7 @@ const EmptyBoard: FC = () => {
           This board is empty. Create a new column to get started.
         </p>
         <Button
+          className=" bg-main-purple hover:bg-main-purple(hover)"
           icon={<AiOutlinePlus />}
           onClick={() => setSelectedModal(ModalType.EditBoard)}
         >

@@ -8,10 +8,12 @@ interface AppStore {
   selectedBoard: string;
   viewTask: string;
   selectedModal: ModalType;
+  showSideBar: boolean;
   setSelectedModal: (modal: ModalType) => void;
   setViewTask: (taskId: string) => void;
   setSelectedBoard: (boardId: string) => void;
   setDelete: (type: 'board' | 'task') => void;
+  toggleSideBar: () => void;
 }
 
 const useAppStore = create<AppStore>((set) => ({
@@ -20,6 +22,7 @@ const useAppStore = create<AppStore>((set) => ({
   selectedBoard: '',
   viewTask: '',
   selectedModal: ModalType.None,
+  showSideBar: true,
   setSelectedModal: (modal: ModalType) =>
     set((state) => ({ ...state, selectedModal: modal })),
   setViewTask: (taskId: string) =>
@@ -28,6 +31,8 @@ const useAppStore = create<AppStore>((set) => ({
     set((state) => ({ ...state, selectedBoard: boardId })),
   setDelete: (type: 'board' | 'task') =>
     set((state) => ({ ...state, deleteType: type })),
+  toggleSideBar: () =>
+    set((state) => ({ ...state, showSideBar: !state.showSideBar })),
 }));
 
 export default useAppStore;

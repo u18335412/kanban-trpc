@@ -121,6 +121,26 @@ export const taskRouter = createRouter()
       });
     },
   })
+  .mutation('toggleSubtaskCompletion', {
+    input: z.object({
+      id: z.string().uuid(),
+      data: z.object({
+        is_complete: z.boolean(),
+      }),
+    }),
+    async resolve({ input }) {
+      const {
+        id,
+        data: { is_complete },
+      } = input;
+      return prisma.sub_Task.update({
+        where: { id },
+        data: {
+          complete: is_complete,
+        },
+      });
+    },
+  })
   .mutation('delete', {
     input: z.object({
       id: z.string().uuid(),

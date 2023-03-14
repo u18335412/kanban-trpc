@@ -11,7 +11,7 @@
     "db-migrate-dev": "npx prisma migrate dev",
     "db-nuke": "docker-compose down --volumes --remove-orphans",
     "dev": "doppler run -- next dev",
-    "dx": "run-s db-up db-migrate-dev db-seed dev",
+    "dx": "doppler run run-s db-up db-migrate-dev db-seed dev",
     "start": "doppler run next start",
     "lint": "eslint src",
     "lint-fix": "npx lint --fix",

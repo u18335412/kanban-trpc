@@ -39,15 +39,19 @@ const DropDown: FC<DropDownProps> = ({ items, text, icon, className }) => {
             return (
               <div key={text + action}>
                 <Menu.Item>
-                  <button
-                    onClick={action}
-                    className={clsx(
-                      'group font-medium flex w-full items-center rounded-md text-sm',
-                      text_color,
-                    )}
-                  >
-                    {text}
-                  </button>
+                  {({ active }) => (
+                    <button
+                      onClick={action}
+                      className={clsx(
+                        'group font-medium flex w-full items-center rounded-md text-sm',
+                        text_color,
+                        active &&
+                          'dark:text-white text-very-dark-grey font-bold',
+                      )}
+                    >
+                      {text}
+                    </button>
+                  )}
                 </Menu.Item>
               </div>
             );

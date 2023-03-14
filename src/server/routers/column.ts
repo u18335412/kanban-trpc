@@ -12,7 +12,7 @@ const defaultColumnSelect = Prisma.validator<Prisma.ColumnSelect>()({
       Sub_Task: true,
     },
   },
-  task_order: true,
+  taskOrder: true,
 });
 
 export const columnRouter = createRouter()
@@ -101,7 +101,7 @@ export const columnRouter = createRouter()
       return prisma.column.update({
         where: { id },
         data: {
-          task_order: order,
+          taskOrder: order,
         },
         select: defaultColumnSelect,
       });

@@ -21,10 +21,8 @@ const ModalManager: FC = () => {
   const { selectedModal, setSelectedModal } = useAppStore();
   const closeModal = () => setSelectedModal(ModalType.None);
 
-  // const DynamicViewTaskModal = dynamic(() => import('./ViewTaskModal'));
-
   return (
-    <div>
+    <>
       <ViewTaskModal
         closeModal={closeModal}
         isOpen={selectedModal === ModalType.ViewTask}
@@ -49,7 +47,7 @@ const ModalManager: FC = () => {
         closeModal={closeModal}
         isOpen={selectedModal === ModalType.EditBoard}
       />
-    </div>
+    </>
   );
 };
 

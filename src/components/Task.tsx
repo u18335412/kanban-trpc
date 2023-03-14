@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Draggable } from 'react-beautiful-dnd';
+
 const Task: FC<{
   index: number;
   id: string;

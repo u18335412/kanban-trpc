@@ -1,10 +1,7 @@
 import { FC, useEffect, useState, memo } from 'react';
 import { Sub_Task, Task as TaskType } from '@prisma/client';
-import { trpc } from '~/utils/trpc';
-import { FixedSizeList, areEqual } from 'react-window';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import ListItem from './ListItem';
-// import useAppStore from '~/data/useStore';
 
 export type ExtendedTask = TaskType & { Sub_Task: Sub_Task[] };
 interface ColumnProps {
@@ -12,7 +9,7 @@ interface ColumnProps {
   title: string;
   id: string;
   setSelectedTaskId: (taskId: string) => void;
-  task_order_id: string;
+  taskOrderId: string;
   index: number;
 }
 
@@ -21,38 +18,19 @@ const Column: FC<ColumnProps> = ({
   title,
   setSelectedTaskId,
   id,
-  task_order_id,
   index,
 }) => {
-  // const { selectedBoard } = useAppStore();
   const [tasks, setTasks] = useState<ExtendedTask[]>([]);
-  const mutate = trpc.useMutation(['task.switchColumns']);
-  const columnOrderMutation = trpc.useMutation(['column.updateOrder']);
-  // const utils = trpc.useContext();
-  const handleTaskAddedFromAnotherList = (taskId: string) => {
-    mutate.mutate(
-      {
-        id: taskId,
-        data: {
-          to_column_id: id,
-        },
-      },
-      {
-        onSuccess: (res) => {
-          console.log('success', res);
-          // utils.invalidateQueries(['board.byId', { id: selectedBoard }]);
-        },
-      },
-    );
-  };
+
   useEffect(() => {
     setTasks(task);
   }, [task]);
+
   return (
     <Draggable draggableId={id} index={index}>
       {(provided) => (
         <div
-          className="max-w-[17.5rem] min-w-[17.5rem] h-screen mr-6"
+          className="max-w-[17.5rem] min-w-[17.5rem] max-h-screen h-screen mr-6"
           {...provided.draggableProps}
           ref={provided.innerRef}
         >
@@ -69,7 +47,7 @@ const Column: FC<ColumnProps> = ({
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                   className="flex h-full flex-col mt-6 gap-y-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]
-            [scrollbar-width:none]"
+                  [scrollbar-width:none]"
                 >
                   {tasks.map(({ title, id, Sub_Task }, idx) => {
                     return (

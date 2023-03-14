@@ -187,7 +187,7 @@ const EditBoardModal: FC<EditBoardModalProps> = ({ isOpen, closeModal }) => {
                           <Button
                             icon={<AiOutlinePlus />}
                             onClick={(e) => addColumn(e)}
-                            className="flex justify-center w-full p-2 py-2  rounded-full text-main-purple bg-white"
+                            className="flex justify-center w-full p-2 py-2 bg-white rounded-full text-main-purple"
                           >
                             Add New Column
                           </Button>
@@ -196,7 +196,7 @@ const EditBoardModal: FC<EditBoardModalProps> = ({ isOpen, closeModal }) => {
                       <div className="mt-6">
                         <Button
                           type="submit"
-                          className="flex justify-center p-2 py-2 text-white bg-indigo-500 rounded-full cursor-pointer bg-main-purple"
+                          className="flex justify-center p-2 py-2 text-white bg-indigo-500 rounded-full cursor-pointer bg-main-purple hover:bg-main-purple(hover)"
                         >
                           {mutate.isLoading ? (
                             <ImSpinner8 className="w-5 h-5 white animate-spin" />

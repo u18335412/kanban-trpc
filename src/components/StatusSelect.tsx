@@ -43,12 +43,12 @@ const StatusSelect: FC<StatusSelectProps> = ({
                   key={column.value}
                   className={({ active }) =>
                     `relative cursor-default select-none${
-                      active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
+                      active && ' dark:text-white text-very-dark-grey font-bold'
                     }`
                   }
                   value={column}
                 >
-                  <span className="block truncate transition-all cursor-pointer  hover:text-white">
+                  <span className="block truncate transition-all cursor-pointer dark:hover:text-white hover:text-very-dark-grey">
                     {column.text}
                   </span>
                 </Listbox.Option>
