@@ -9,7 +9,11 @@ const defaultTaskSelect = Prisma.validator<Prisma.TaskSelect>()({
   title: true,
   description: true,
   column_id: true,
-  Sub_Task: true,
+  Sub_Task: {
+    orderBy: {
+      title: 'asc',
+    },
+  },
 });
 
 export const taskRouter = createRouter()
